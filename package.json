@@ -1,0 +1,49 @@
+{
+    "name": "orma_demo",
+    "version": "1.0.2",
+    "description": "Orma api demo",
+    "main": "build/index.js",
+    "scripts": {
+        "start": "node -r sucrase/register -e \"require('./src/index.ts').start_server('production')\"",
+        "sp": "nodemon --exec \"node -r sucrase/register -e \\\"require('./src/index.ts').start_server('production')\\\"\"",
+        "sd": "nodemon --exec \"node -r sucrase/register -e \\\"require('./src/index.ts').start_server('development')\\\"\"",
+        "dp": "node -r sucrase/register -e \"require('./src/scripts/dehydrate').dehydrate('production')\"",
+        "rd": "node -r sucrase/register -e \"require('./src/scripts/reset').reset('production', 'development')\"",
+        "hd": "node -r sucrase/register -e \"require('./src/scripts/hydrate').hydrate('development')\"",
+        "mocha": "mocha --package package.json",
+        "test-coverage": "nodemon --signal SIGKILL --exec nyc --reporter=lcov mocha --package package.json",
+        "test": "nodemon --signal SIGKILL --exec mocha --package package.json",
+        "coverage-watch": "live-server coverage/lcov-report",
+        "deploy": "node -r sucrase/register -e \"require('./helpers/hosting/deploy.ts').deploy()\""
+    },
+    "nodemonConfig": {
+        "verbose": true,
+        "legacyWatch": true,
+        "ignore": [
+            "node_modules",
+            "generated"
+        ],
+        "watch": [
+            "./"
+        ],
+        "signal": "SIGKILL",
+        "exec": "npm run mocha",
+        "ext": "ts, js, jsx, tsx"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "chai": "^4.3.6",
+        "live-server": "^1.2.2",
+        "mocha": "^10.0.0",
+        "nodemon": "^2.0.18",
+        "nyc": "^15.1.0",
+        "sinon": "^14.0.0"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.1",
+        "pg": "^8.7.3",
+        "sucrase": "^3.22.0"
+    }
+}
