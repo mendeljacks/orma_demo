@@ -4,12 +4,14 @@ export const orma_schema = {
             data_type: 'int',
             not_null: true,
             indexed: true,
+            auto_increment: true,
             primary_key: true
         },
         email: { data_type: 'varchar', not_null: true },
         password: { data_type: 'varchar', not_null: true },
-        first_name: { data_type: 'varchar', not_null: true },
-        last_name: { data_type: 'varchar', not_null: true },
+        first_name: { data_type: 'varchar' },
+        last_name: { data_type: 'varchar' },
+        phone: { data_type: 'varchar' },
         created_at: {
             data_type: 'timestamp',
             not_null: true,
@@ -34,7 +36,7 @@ export const orma_schema = {
             {
                 index_name: 'PRIMARY',
                 is_unique: true,
-                fields: ['users_id_un']
+                fields: ['id']
             }
         ]
     }

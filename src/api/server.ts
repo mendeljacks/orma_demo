@@ -3,11 +3,11 @@ import express from 'express'
 import { handler } from 'express_phandler'
 import { orma_query } from 'orma'
 import { orma_schema } from '../../generated/orma_schema'
-import { byo_query_fn } from '../config/orma'
+import { byo_query_fn, mutate_handler } from '../config/orma'
 import { introspect } from '../scripts/introspect'
 import { login_user } from './login'
 
-const port = process.env.PORT || 2000
+const port = process.env.PORT || 3000
 
 export const start = async (env: 'production' | 'development') => {
     const app = express()
@@ -27,15 +27,20 @@ export const start = async (env: 'production' | 'development') => {
     app.post(
         '/query',
         handler(async (req, res) => {
-            const results = await orma_query(req.body, orma_schema, byo_query_fn)
+            const results = await orma_query(
+                req.body,
+                orma_schema,
+                ss => byo_query_fn(ss.map(el => ({ sql_string: el }))),
+                i => i
+            )
             return results
         })
     )
 
-    // app.post(
-    //     '/mutate',
-    //     handler(async req => mutateHandler(req.body, orma_schema))
-    // )
+    app.post(
+        '/mutate',
+        handler(async req => mutate_handler(req.body, orma_schema))
+    )
 
     await new Promise(r => app.listen(port, r as any))
     console.log(`Listening at http://localhost:${port}`)

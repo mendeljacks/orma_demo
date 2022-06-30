@@ -24,7 +24,12 @@ export const login_user = async (email, password) => {
         }
     }
 
-    const { users } = (await orma_query(query, orma_schema, byo_query_fn)) as any
+    const { users } = (await orma_query(
+        query,
+        orma_schema,
+        ss => byo_query_fn(ss.map(el => ({ sql_string: el }))),
+        i => i
+    )) as any
     if (users.length !== 1) {
         return Promise.reject('Incorrect email')
     }

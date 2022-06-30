@@ -5,6 +5,7 @@
     "main": "src/api/server.ts",
     "scripts": {
         "start": "node -r sucrase/register -e \"require('./src/api/server.ts').start('production')\"",
+        "dev": "nodemon --exec npm run start",
         "sp": "nodemon --exec \"node -r sucrase/register -e \\\"require('./src/api/server.ts').start('production')\\\"\"",
         "sd": "nodemon --exec \"node -r sucrase/register -e \\\"require('./src/api/server.ts').start('development')\\\"\"",
         "dp": "node -r sucrase/register -e \"require('./src/scripts/dehydrate').dehydrate('production')\"",
@@ -30,6 +31,15 @@
         "exec": "npm run mocha",
         "ext": "ts, js, jsx, tsx"
     },
+    "mocha": {
+        "require": [
+            "sucrase/register/ts"
+        ],
+        "spec": [
+            "src/**/*.test.ts"
+        ],
+        "timeout": 0
+    },
     "author": "",
     "license": "ISC",
     "devDependencies": {
@@ -46,7 +56,7 @@
         "express": "^4.18.1",
         "express_phandler": "^1.0.7",
         "jsonwebtoken": "^8.5.1",
-        "orma": "^1.0.97",
+        "orma": "^1.0.98",
         "pg": "^8.7.3",
         "sucrase": "^3.22.0"
     }

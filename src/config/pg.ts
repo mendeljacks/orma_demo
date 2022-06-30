@@ -8,7 +8,7 @@ export const pool = new Pool({
 
 export const trans = async fn => {
     const connection = await pool
-        .getConnection()
+        .connect()
         .catch(err => Promise.reject({ message: 'Could not start connection', err }))
     try {
         await connection.query('BEGIN')
