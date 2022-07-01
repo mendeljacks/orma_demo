@@ -1,9 +1,9 @@
 import { writeFileSync } from 'fs'
-import { orma_introspect } from 'orma/build/introspector/introspector'
+import { orma_introspect } from 'orma/src/index'
 import { byo_query_fn } from '../config/orma'
 
 export const introspect = async db => {
-    const orma_schema = await orma_introspect(db, byo_query_fn)
+    const orma_schema = await orma_introspect('public', byo_query_fn, { db_type: 'postgres' })
     try {
         const str = `export const orma_schema = ${JSON.stringify(orma_schema, null, 2)} as const`
         writeFileSync('./generated/orma_schema.ts', str)

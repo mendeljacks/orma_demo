@@ -1,8 +1,6 @@
-import { orma_query } from 'orma'
 import jwt from 'jsonwebtoken'
 import * as env from '../../env.json'
-import { orma_schema } from '../../generated/orma_schema'
-import { byo_query_fn } from '../config/orma'
+import { query_handler } from '../config/orma'
 
 export const login_user = async (email, password) => {
     if (!email) {
@@ -24,12 +22,7 @@ export const login_user = async (email, password) => {
         }
     }
 
-    const { users } = (await orma_query(
-        query,
-        orma_schema,
-        ss => byo_query_fn(ss.map(el => ({ sql_string: el }))),
-        i => i
-    )) as any
+    const { users } = (await query_handler(query)) as any
     if (users.length !== 1) {
         return Promise.reject('Incorrect email')
     }

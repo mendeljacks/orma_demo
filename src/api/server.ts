@@ -1,9 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import { handler } from 'express_phandler'
-import { orma_query } from 'orma'
-import { orma_schema } from '../../generated/orma_schema'
-import { byo_query_fn, mutate_handler } from '../config/orma'
+import { mutate_handler, query_handler } from '../config/orma'
 import { introspect } from '../scripts/introspect'
 import { login_user } from './login'
 
@@ -11,7 +9,7 @@ const port = process.env.PORT || 3000
 
 export const start = async (env: 'production' | 'development') => {
     const app = express()
-    // await introspect(env)
+    await introspect(env)
 
     app.use(cors())
     app.use(express.json({ limit: '50mb' }))
@@ -27,19 +25,14 @@ export const start = async (env: 'production' | 'development') => {
     app.post(
         '/query',
         handler(async (req, res) => {
-            const results = await orma_query(
-                req.body,
-                orma_schema,
-                ss => byo_query_fn(ss.map(el => ({ sql_string: el }))),
-                i => i
-            )
+            const results = await query_handler(req.body)
             return results
         })
     )
 
     app.post(
         '/mutate',
-        handler(async req => mutate_handler(req.body, orma_schema))
+        handler(async req => mutate_handler(req.body))
     )
 
     await new Promise(r => app.listen(port, r as any))

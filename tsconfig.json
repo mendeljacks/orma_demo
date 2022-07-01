@@ -1,4 +1,18 @@
 {
+    // Most ts-node options can be specified here using their programmatic names.
+    "ts-node": {
+        // It is faster to skip typechecking.
+        // Remove if you want ts-node to do typechecking.
+        "transpileOnly": true,
+
+        "files": true,
+        "ignore": ["node_modules/(?!orma)"],
+        "compilerOptions": {
+            // compilerOptions specified here will override those declared below,
+            // but *only* in ts-node.  Useful if you want ts-node and tsc to use
+            // different options with a single tsconfig.json.
+        }
+    },
     "compilerOptions": {
         "target": "ES2017",
         "module": "commonjs",
@@ -7,7 +21,8 @@
         "strict": false,
         "lib": ["ES2019", "DOM"],
         "downlevelIteration": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "esModuleInterop": true
     },
     "include": ["src"],
     "exclude": ["node_modules"]
