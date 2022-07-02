@@ -9,8 +9,8 @@
         "sp": "nodemon --exec \"node -r ts-node/register -e \\\"require('./src/api/server.ts').start('production')\\\"\"",
         "sd": "nodemon --exec \"node -r ts-node/register -e \\\"require('./src/api/server.ts').start('development')\\\"\"",
         "dp": "node -r ts-node/register -e \"require('./src/scripts/dehydrate').dehydrate('production')\"",
-        "rd": "node -r ts-node/register -e \"require('./src/scripts/reset').reset('production', 'development')\"",
         "hd": "node -r ts-node/register -e \"require('./src/scripts/hydrate').hydrate('development')\"",
+        "rd": "node -r ts-node/register -e \"require('./src/scripts/reset.ts').reset()\"",
         "mocha": "mocha --package package.json",
         "test-coverage": "nodemon --signal SIGKILL --exec nyc --reporter=lcov mocha --package package.json",
         "test": "nodemon --signal SIGKILL --exec mocha --package package.json",
@@ -45,6 +45,8 @@
     "devDependencies": {
         "@types/node": "^18.0.0",
         "chai": "^4.3.6",
+        "db-migrate": "^0.11.13",
+        "db-migrate-pg": "^1.2.2",
         "live-server": "^1.2.2",
         "mocha": "^10.0.0",
         "nodemon": "^2.0.18",
