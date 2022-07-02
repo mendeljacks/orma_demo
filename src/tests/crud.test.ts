@@ -2,15 +2,7 @@ import { expect } from 'chai'
 import cuid from 'cuid'
 import { describe, test, beforeEach } from 'mocha'
 import { mutate_handler, query_handler } from '../config/orma'
-
-const reset = async () => {
-    const body = { users: { id: true } }
-
-    const result: any = await query_handler(body)
-    if (result?.users.length) {
-        await mutate_handler({ $operation: 'delete', users: result?.users })
-    }
-}
+import { reset } from '../scripts/reset'
 
 describe('Crud Orma', () => {
     beforeEach(async () => {
