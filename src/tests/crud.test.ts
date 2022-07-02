@@ -1,28 +1,22 @@
 import { expect } from 'chai'
 import cuid from 'cuid'
-import { describe, test } from 'mocha'
+import { describe, test, beforeEach } from 'mocha'
 import { mutate_handler, query_handler } from '../config/orma'
 
+const reset = async () => {
+    const body = { users: { id: true } }
+
+    const result: any = await query_handler(body)
+    if (result?.users.length) {
+        await mutate_handler({ $operation: 'delete', users: result?.users })
+    }
+}
+
 describe('Crud Orma', () => {
+    beforeEach(async () => {
+        await reset()
+    })
     test('Create a user', async () => {
-        const body = {
-            users: {
-                id: true,
-                email: true,
-                password: true,
-                first_name: true,
-                last_name: true,
-                phone: true
-                // created_at: true
-                // updated_at: true
-            }
-        }
-
-        const result: any = await query_handler(body)
-        if (result?.users.length) {
-            await mutate_handler({ $operation: 'delete', users: result?.users })
-        }
-
         const user = {
             id: { $guid: cuid() },
             email: 'mendeljacks@gmail.com',
@@ -30,17 +24,6 @@ describe('Crud Orma', () => {
             first_name: 'Mendel',
             last_name: 'Jackson',
             phone: '1234567890'
-            // user_has_roles: [
-            //     {
-            //         id: { $guid: 2 },
-            //         roles: [
-            //             {
-            //                 id: { $guid: 3 },
-            //                 name: 'admin'
-            //             }
-            //         ]
-            //     }
-            // ]
         }
         const mutation = {
             $operation: 'create',
@@ -48,44 +31,13 @@ describe('Crud Orma', () => {
         }
 
         const mutate_response = await mutate_handler(mutation)
+        expect(mutate_response.users.length).to.equal(1)
     })
     test('Create a user select created_at updated_at', async () => {
-        const body = {
-            users: {
-                id: true,
-                email: true,
-                password: true,
-                first_name: true,
-                last_name: true,
-                phone: true,
-                created_at: true,
-                updated_at: true
-            }
-        }
-
-        const result: any = await query_handler(body)
-        if (result?.users.length) {
-            await mutate_handler({ $operation: 'delete', users: result?.users })
-        }
-
         const user = {
             id: { $guid: cuid() },
             email: 'mendeljacks@gmail.com',
-            password: 'password',
-            first_name: 'Mendel',
-            last_name: 'Jackson',
-            phone: '1234567890'
-            // user_has_roles: [
-            //     {
-            //         id: { $guid: 2 },
-            //         roles: [
-            //             {
-            //                 id: { $guid: 3 },
-            //                 name: 'admin'
-            //             }
-            //         ]
-            //     }
-            // ]
+            password: 'password'
         }
         const mutation = {
             $operation: 'create',
@@ -93,8 +45,7 @@ describe('Crud Orma', () => {
         }
 
         const mutate_response = await mutate_handler(mutation)
-    })
-    test('Create a user nested', async () => {
+
         const body = {
             users: {
                 id: true,
@@ -109,12 +60,13 @@ describe('Crud Orma', () => {
         }
 
         const result: any = await query_handler(body)
-        if (result?.users.length) {
-            await mutate_handler({ $operation: 'delete', users: result?.users })
-        }
 
+        expect(result?.users[0].created_at).to.be.a('string')
+        expect(result?.users[0].updated_at).to.be.a('string')
+    })
+    test('Create a user nested', async () => {
         const user = {
-            id: { $guid: cuid() },
+            // id: { $guid: cuid() },
             email: 'mendeljacks@gmail.com',
             password: 'password',
             first_name: 'Mendel',
@@ -122,10 +74,10 @@ describe('Crud Orma', () => {
             phone: '1234567890',
             user_has_roles: [
                 {
-                    id: { $guid: cuid() },
+                    // id: { $guid: cuid() },
                     roles: [
                         {
-                            id: { $guid: cuid() },
+                            // id: { $guid: cuid() },
                             name: 'admin'
                         }
                     ]
@@ -138,5 +90,6 @@ describe('Crud Orma', () => {
         }
 
         const mutate_response = await mutate_handler(mutation)
+        expect(mutate_response.users.length).to.equal(1)
     })
 })

@@ -6,8 +6,12 @@ types.setTypeParser(20, function (val) {
     return parseInt(val, 10)
 })
 
+types.setTypeParser(1084, date => date)
+types.setTypeParser(1114, date => date)
+
 export const pool = new Pool({
     connectionString: env.pg,
+    types,
     ssl: { rejectUnauthorized: false }
 })
 
