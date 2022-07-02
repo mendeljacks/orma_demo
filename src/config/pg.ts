@@ -1,5 +1,10 @@
-import { Pool } from 'pg'
+import { Pool, types } from 'pg'
 import * as env from '../../env.json'
+
+// Enable postgres numbers to cast into JS numbers
+types.setTypeParser(20, function (val) {
+    return parseInt(val, 10)
+})
 
 export const pool = new Pool({
     connectionString: env.pg,

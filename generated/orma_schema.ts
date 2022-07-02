@@ -25,9 +25,7 @@ export const orma_schema = {
         "index_name": "primary",
         "is_unique": true,
         "fields": [
-          "id",
-          "name",
-          "run_on"
+          "id"
         ],
         "invisible": false
       }
@@ -38,9 +36,10 @@ export const orma_schema = {
       "data_type": "bigint",
       "ordinal_position": "1",
       "not_null": true,
+      "primary_key": true,
       "character_count": "64",
       "decimal_places": "0",
-      "default": "unique_rowid()"
+      "default": "nextval('public.users_id_seq'::REGCLASS)"
     },
     "email": {
       "data_type": "character varying",
@@ -91,18 +90,18 @@ export const orma_schema = {
     },
     "$indexes": [
       {
-        "index_name": "users_pk",
+        "index_name": "primary",
         "is_unique": true,
         "fields": [
-          "id",
-          "email",
-          "password",
-          "first_name",
-          "last_name",
-          "phone",
-          "created_at",
-          "updated_at",
-          "resource_id"
+          "id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "users_phone_uq",
+        "is_unique": true,
+        "fields": [
+          "phone"
         ],
         "invisible": false
       },
@@ -110,26 +109,15 @@ export const orma_schema = {
         "index_name": "users_resource_id_uq",
         "is_unique": true,
         "fields": [
-          "resource_id",
-          "id"
+          "resource_id"
         ],
         "invisible": false
       },
       {
-        "index_name": "users_phone_un",
+        "index_name": "users_email_uq",
         "is_unique": true,
         "fields": [
-          "phone",
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_email_un",
-        "is_unique": true,
-        "fields": [
-          "email",
-          "id"
+          "email"
         ],
         "invisible": false
       }
@@ -140,9 +128,10 @@ export const orma_schema = {
       "data_type": "bigint",
       "ordinal_position": "1",
       "not_null": true,
+      "primary_key": true,
       "character_count": "64",
       "decimal_places": "0",
-      "default": "unique_rowid()"
+      "default": "nextval('public.roles_id_seq'::REGCLASS)"
     },
     "name": {
       "data_type": "character varying",
@@ -172,32 +161,26 @@ export const orma_schema = {
     },
     "$indexes": [
       {
-        "index_name": "roles_pk",
+        "index_name": "primary",
         "is_unique": true,
         "fields": [
-          "id",
-          "name",
-          "created_at",
-          "updated_at",
+          "id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "roles_name_uq",
+        "is_unique": true,
+        "fields": [
+          "name"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "roles_resource_id_uq",
+        "is_unique": true,
+        "fields": [
           "resource_id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id",
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "roles_name_un",
-        "is_unique": true,
-        "fields": [
-          "name",
-          "id"
         ],
         "invisible": false
       }
@@ -208,9 +191,10 @@ export const orma_schema = {
       "data_type": "bigint",
       "ordinal_position": "1",
       "not_null": true,
+      "primary_key": true,
       "character_count": "64",
       "decimal_places": "0",
-      "default": "unique_rowid()"
+      "default": "nextval('public.user_has_roles_id_seq'::REGCLASS)"
     },
     "user_id": {
       "data_type": "bigint",
@@ -258,34 +242,27 @@ export const orma_schema = {
     },
     "$indexes": [
       {
-        "index_name": "user_has_roles_pk",
+        "index_name": "primary",
         "is_unique": true,
         "fields": [
-          "id",
-          "user_id",
+          "id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "user_has_roles_user_id_role_id_uq",
+        "is_unique": true,
+        "fields": [
           "role_id",
-          "created_at",
-          "updated_at",
+          "user_id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "user_has_roles_resource_id_uq",
+        "is_unique": true,
+        "fields": [
           "resource_id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id",
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "user_has_roles_un",
-        "is_unique": true,
-        "fields": [
-          "user_id",
-          "role_id",
-          "id"
         ],
         "invisible": false
       }
@@ -296,9 +273,10 @@ export const orma_schema = {
       "data_type": "bigint",
       "ordinal_position": "1",
       "not_null": true,
+      "primary_key": true,
       "character_count": "64",
       "decimal_places": "0",
-      "default": "unique_rowid()"
+      "default": "nextval('public.permissions_id_seq'::REGCLASS)"
     },
     "name": {
       "data_type": "character varying",
@@ -327,32 +305,26 @@ export const orma_schema = {
     },
     "$indexes": [
       {
-        "index_name": "permissions_pk",
+        "index_name": "primary",
         "is_unique": true,
         "fields": [
-          "id",
-          "name",
-          "created_at",
-          "updated_at",
+          "id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "permissions_name_uq",
+        "is_unique": true,
+        "fields": [
+          "name"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "permissions_resource_id_uq",
+        "is_unique": true,
+        "fields": [
           "resource_id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id",
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "permissions_un",
-        "is_unique": true,
-        "fields": [
-          "name",
-          "id"
         ],
         "invisible": false
       }
@@ -363,9 +335,10 @@ export const orma_schema = {
       "data_type": "bigint",
       "ordinal_position": "1",
       "not_null": true,
+      "primary_key": true,
       "character_count": "64",
       "decimal_places": "0",
-      "default": "unique_rowid()"
+      "default": "nextval('public.role_has_permissions_id_seq'::REGCLASS)"
     },
     "role_id": {
       "data_type": "bigint",
@@ -413,34 +386,27 @@ export const orma_schema = {
     },
     "$indexes": [
       {
-        "index_name": "role_has_pemissions_pk",
+        "index_name": "primary",
         "is_unique": true,
         "fields": [
-          "id",
-          "role_id",
+          "id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "role_has_permissions_role_id_permission_id_uq",
+        "is_unique": true,
+        "fields": [
           "permission_id",
-          "created_at",
-          "updated_at",
+          "role_id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "role_has_permissions_resource_id_uq",
+        "is_unique": true,
+        "fields": [
           "resource_id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id",
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "role_has_pemissions_un",
-        "is_unique": true,
-        "fields": [
-          "role_id",
-          "permission_id",
-          "id"
         ],
         "invisible": false
       }
@@ -451,9 +417,10 @@ export const orma_schema = {
       "data_type": "bigint",
       "ordinal_position": "1",
       "not_null": true,
+      "primary_key": true,
       "character_count": "64",
       "decimal_places": "0",
-      "default": "unique_rowid()"
+      "default": "nextval('public.groups_id_seq'::REGCLASS)"
     },
     "name": {
       "data_type": "bigint",
@@ -484,32 +451,26 @@ export const orma_schema = {
     },
     "$indexes": [
       {
-        "index_name": "role_has_pemissions_pk",
+        "index_name": "primary",
         "is_unique": true,
         "fields": [
-          "id",
-          "name",
-          "created_at",
-          "updated_at",
+          "id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "groups_name_uq",
+        "is_unique": true,
+        "fields": [
+          "name"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "groups_resource_id_uq",
+        "is_unique": true,
+        "fields": [
           "resource_id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id",
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "role_has_pemissions_un",
-        "is_unique": true,
-        "fields": [
-          "name",
-          "id"
         ],
         "invisible": false
       }
