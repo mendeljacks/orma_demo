@@ -1,14 +1,18 @@
 npm i 
 npm start
+ensure env.json present at root level
 
-POST localhost:3000/login
-{
+```javascript
+// Login an existing user
+// POST localhost:3000/login
+const body = {
    "email": "mendeljacks@gmail.com",
    "password": "password"
 }
 
-POST localhost:3000/mutate
-{
+// Make a mutation to the database
+// POST localhost:3000/mutate
+const body = {
     "$operation": "create",
     "users": [{
             "email": "mendeljacks@gmail.com",
@@ -20,8 +24,9 @@ POST localhost:3000/mutate
 }
 
 
-POST localhost:3000/query
-{
+// Make a query to the database
+// POST localhost:3000/query
+const body = {
             "users": {
                 "id": true,
                 "email": true,
@@ -33,3 +38,4 @@ POST localhost:3000/query
                 "updated_at": true
             }
         }
+```
