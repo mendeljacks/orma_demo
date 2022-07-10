@@ -1,0 +1,8 @@
+- ts prune
+- change schema from company to orma
+- cleanup sheet builder folder
+- change from sheet builder component to page to get extra buttons
+- searchable dropdowns
+- enter your own schema by pasting
+- static hosting
+- introspector ui
