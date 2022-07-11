@@ -30,12 +30,13 @@ const reset_query_log = action((query: any, schema: any) => {
 })
 
 autorun(() => {
-    let query = store.query
-    let schema = store.schema
-    store.query_input_text = JSON.stringify(query, null, 2)
-    store.schema_input_text = JSON.stringify(schema, null, 2)
-
-    reset_query_log(query, schema)
+    let query = toJS(store.query)
+    let schema = toJS(store.schema)
+    runInAction(() => {
+        store.query_input_text = JSON.stringify(query, null, 2)
+        store.schema_input_text = JSON.stringify(schema, null, 2)
+        reset_query_log(query, schema)
+    })
 })
 
 // To interact with store from console
