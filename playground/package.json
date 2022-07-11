@@ -19,10 +19,12 @@
     "mobx": "^6.6.1",
     "mobx-loader": "^1.0.10",
     "mobx-react-lite": "^3.4.0",
+    "orma": "^1.0.106",
     "ramda": "^0.28.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.4.0",
+    "sql-formatter": "^8.0.2",
     "yay_json": "^1.0.20"
   },
   "devDependencies": {

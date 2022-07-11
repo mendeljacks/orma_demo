@@ -7,20 +7,13 @@ import { QueryBuilder } from '../sheet_builder_old/query_builder'
 import { store } from '../store'
 import { try_parse_json } from '../try_parse_json'
 
-export const SheetBuilderPage = observer(() => {
+export const QueryPage = observer(() => {
     return (
-        <div
-            style={{
-                display: 'grid',
-                placeItems: 'center',
-                height: '100vh'
-            }}
-        >
-            <Typography variant={'h4'}>Orma Playground</Typography>
+        <div>
             <Card
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr 1fr'
+                    gridTemplateColumns: '1fr 1fr 1fr'
                 }}
             >
                 <Center>
@@ -46,14 +39,14 @@ export const SheetBuilderPage = observer(() => {
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />
                 </Center>
-                <Center>
-                    <Typography>Orma Schema</Typography>
 
+                <Center>
+                    <Typography>SQL Query</Typography>
                     <Editor
                         height='50vh'
                         width='100%'
-                        defaultLanguage='json'
-                        value={store.schema_input_text}
+                        defaultLanguage='sql'
+                        value={store.sql_queries}
                         onChange={action(val => {
                             const json = try_parse_json(val || '', undefined)
                             if (json) {
@@ -63,10 +56,6 @@ export const SheetBuilderPage = observer(() => {
                         })}
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />
-                </Center>
-                <Center>
-                    <Typography>SQL Query</Typography>
-                    <TextField multiline minRows={10} maxRows={10} />
                 </Center>
             </Card>
         </div>
