@@ -6,4 +6,3 @@
 - dropdown showing existing item for top level bug
 - id always showing bug
 - multiple sql queries not showing for nested tables
-- static hosting
