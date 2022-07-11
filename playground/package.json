@@ -1,37 +1,37 @@
 {
-  "name": "playground",
-  "private": true,
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.9.3",
-    "@monaco-editor/react": "^4.4.5",
-    "@mui/material": "^5.8.7",
-    "@mui/styles": "^5.8.7",
-    "@types/ramda": "^0.28.15",
-    "axios": "^0.27.2",
-    "deepdash": "^5.3.9",
-    "mobx": "^6.6.1",
-    "mobx-loader": "^1.0.10",
-    "mobx-react-lite": "^3.4.0",
-    "orma": "^1.0.106",
-    "ramda": "^0.28.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-icons": "^4.4.0",
-    "sql-formatter": "^8.0.2",
-    "yay_json": "^1.0.20"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@vitejs/plugin-react": "^1.3.0",
-    "typescript": "^4.6.3",
-    "vite": "^2.9.9"
-  }
+    "name": "playground",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.9.3",
+        "@emotion/styled": "^11.9.3",
+        "@monaco-editor/react": "^4.4.5",
+        "@mui/material": "^5.8.7",
+        "@mui/styles": "^5.8.7",
+        "@types/ramda": "^0.28.15",
+        "axios": "^0.27.2",
+        "deepdash": "^5.3.9",
+        "mobx": "^6.6.1",
+        "mobx-loader": "^1.0.10",
+        "mobx-react-lite": "^3.4.0",
+        "orma": "^1.0.106",
+        "ramda": "^0.28.0",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "react-icons": "^4.4.0",
+        "sql-formatter": "^8.0.2",
+        "yay_json": "^1.0.20"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
+        "@vitejs/plugin-react": "^1.3.0",
+        "typescript": "^4.6.3",
+        "vite": "^2.9.9"
+    }
 }
