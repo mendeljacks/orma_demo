@@ -3,8 +3,9 @@ import filterDeep from 'deepdash/filterDeep'
 import findValueDeep from 'deepdash/findValueDeep'
 import mapValuesDeep from 'deepdash/mapValuesDeep'
 import { action } from 'mobx'
+import { Path } from 'orma/src/types'
 import { assoc, assocPath, dropLast, last, reverse, type } from 'ramda'
-import { assoc_path_mutate } from './helpers'
+import { assoc_path_mutate } from 'yay_json/build/assoc_path_mutate'
 /**
  * Just like pathOr from ramda, except it wont throw errors when used with mobx arrays
  */
@@ -59,26 +60,24 @@ export const assoc_append = action((path_array: any, obj: any, item: any) => {
 /**
  * If the path points to an array, splice the given index out of the array. If after splicing there is nothing in the array, delete the array
  */
-export const assoc_splice = action(
-    (path_array: string | readonly unknown[], obj: any, delete_if_empty = true) => {
-        const splice_index: any = last(path_array)
-        if (type(splice_index) !== 'Number') {
-            throw new Error('Cannot splice from something that is not an array')
-        }
-
-        const path_to_array = dropLast(1, path_array)
-        const existing_array: any = safe_path_or(undefined, path_to_array, obj)
-
-        const is_array = Array.isArray(existing_array)
-        if (is_array && existing_array.length >= 1) {
-            existing_array.splice(splice_index, 1)
-        }
-
-        if (is_array && existing_array.length === 0 && delete_if_empty) {
-            path_delete(obj, path_to_array)
-        }
+export const assoc_splice = action((path_array: Path, obj: any, delete_if_empty = true) => {
+    const splice_index: any = last(path_array)
+    if (type(splice_index) !== 'Number') {
+        throw new Error('Cannot splice from something that is not an array')
     }
-)
+
+    const path_to_array = dropLast(1, path_array)
+    const existing_array: any = safe_path_or(undefined, path_to_array, obj)
+
+    const is_array = Array.isArray(existing_array)
+    if (is_array && existing_array.length >= 1) {
+        existing_array.splice(splice_index, 1)
+    }
+
+    if (is_array && existing_array.length === 0 && delete_if_empty) {
+        path_delete(obj, path_to_array)
+    }
+})
 
 /**
  * Delete if path points to an object key, splice if it points to an array element
@@ -92,21 +91,6 @@ export const delete_or_splice = action(
         }
     }
 )
-
-/**
- * If the target's opeartion is create, splice it out. If the operation is update, set the operation to delete
- */
-export const mutation_delete = action((path_array: any, mutation: any) => {
-    const operation_path_array = get_operation_path(path_array)
-    const operation = safe_path_or(undefined, operation_path_array, mutation)
-    if (operation === 'create') {
-        assoc_splice(path_array, mutation)
-    }
-
-    if (operation === 'update') {
-        assoc_path_mutate(operation_path_array, 'delete', mutation)
-    }
-})
 
 /**
  * A regular pathed append, but also sets the operation to create if an object is being appended
@@ -140,11 +124,7 @@ const get_operation_path = action((path_array: any) => {
     return [...path_array, 'meta', 'operation']
 })
 
-export const get_local_meta_path = (
-    path_array: string | readonly unknown[],
-    meta_name: any,
-    obj: any
-) => {
+export const get_local_meta_path = (path_array: Path[], meta_name: any, obj: any) => {
     const item = safe_path_or(undefined, path_array, obj)
     const base_path = is_primitive(item) ? dropLast(1, path_array) : path_array
 
@@ -158,7 +138,7 @@ export const get_local_meta_path = (
 /**
  * Call javascript delete on whatevers at the given path in the given object
  */
-export const path_delete = action((obj: any, path_array: string | readonly unknown[]) => {
+export const path_delete = action((obj: any, path_array: Path) => {
     if (path_array.length === 0) {
         throw new Error('Cant delete root object')
     }
@@ -168,8 +148,9 @@ export const path_delete = action((obj: any, path_array: string | readonly unkno
 
     if (parent && !is_primitive(parent)) {
         const last_path_el = last(path_array)
-
-        delete parent[last_path_el]
+        if (last_path_el) {
+            delete parent[last_path_el]
+        }
     }
 })
 
@@ -177,12 +158,12 @@ export const path_delete = action((obj: any, path_array: string | readonly unkno
  * Changes the name of a key at a specified path. Note that the path array should include the old key name as the last element
  */
 export const assoc_key_name = action(
-    (path_array: string | readonly unknown[], new_key_name: string | number, obj: any) => {
+    (path_array: Path, new_key_name: string | number, obj: any) => {
         const parent_path = dropLast(1, path_array)
         const parent = safe_path_or(undefined, parent_path, obj)
         const old_key_name = last(path_array)
-        parent[new_key_name] = parent[old_key_name]
-        delete parent[old_key_name]
+        parent[new_key_name] = parent[old_key_name as any]
+        delete parent[old_key_name as any]
     }
 )
 
@@ -361,7 +342,7 @@ export const deep_delete_key = (key_to_delete: any, obj: any) => {
 /**
  * Recursively delete object and arrays that are empty, from the given path all the way up to the root
  */
-export const delete_if_empty = (path_array: string | readonly unknown[], obj: any) => {
+export const delete_if_empty = (path_array: Path, obj: any) => {
     if (path_array.length === 0) {
         return
     }

@@ -10,17 +10,20 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@monaco-editor/react": "^4.4.5",
     "@mui/material": "^5.8.7",
     "@mui/styles": "^5.8.7",
     "@types/ramda": "^0.28.15",
     "axios": "^0.27.2",
     "deepdash": "^5.3.9",
     "mobx": "^6.6.1",
+    "mobx-loader": "^1.0.10",
     "mobx-react-lite": "^3.4.0",
     "ramda": "^0.28.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.4.0",
+    "yay_json": "^1.0.20"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

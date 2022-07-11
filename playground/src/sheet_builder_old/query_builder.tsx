@@ -1,18 +1,13 @@
-import {
-    Box,
-    Chip,
-    CircularProgress,
-    Grid,
-    IconButton,
-    ListSubheader,
-    MenuItem,
-    TextField
-} from '@mui/material'
+import { Box, Chip, Grid, IconButton, ListSubheader, MenuItem, TextField } from '@mui/material'
 import { action, observable, toJS } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { dropLast, equals, last } from 'ramda'
-import React, { useEffect } from 'react'
+import { get_field_names, is_entity_name, is_field_name } from 'orma/src/helpers/schema_helpers'
+import { get_select } from 'orma/src/query/macros/select_macro'
+import { dropLast, last } from 'ramda'
+import React from 'react'
 import { MdAdd, MdChevronRight, MdClose } from 'react-icons/md'
+import { assoc_path_mutate } from 'yay_json/build/assoc_path_mutate'
+import { store } from '../store'
 import {
     assoc_append,
     assoc_key_name,
@@ -21,19 +16,15 @@ import {
     path_delete,
     safe_path_or
 } from './data_helpers'
-import { assoc_path_mutate, title_case } from './helpers'
-import { get_field_names, is_entity_name, is_field_name } from './traversal'
+import { title_case } from './helpers'
 import { MuiChipInput } from './mui_chip_input'
 import {
     delete_nested_path_element,
     get_nested_path_edge_tables,
     get_possible_edge_entity_names,
-    get_select_fields,
     query_path_to_entity_name,
     switch_clause
 } from './query_builder_functions'
-import { store } from '../store'
-import { Center } from './center'
 
 const QueryBuilder_ = ({
     path_array = observable([]),
@@ -48,7 +39,7 @@ const QueryBuilder_ = ({
             <QueryAddSubqueryButton
                 path_array={path_array}
                 query={query}
-                limit_to_one_subquery={true}
+                // limit_to_one_subquery={true}
             />
         </QueryObject>
     )
@@ -125,22 +116,27 @@ const QueryArray = observer(({ children }: { children: any }) => {
 })
 
 const QuerySelect = observer(({ path_array, query }: { path_array: any; query: any }) => {
-    const select_path = [...path_array, 'select']
-    const selects = safe_path_or([], select_path, query)
-    const possible_fields = get_select_fields(select_path, query, store.schema)
+    const subquery = safe_path_or({} as any, path_array, query)
+    const selects = get_select(subquery, path_array, store.schema).filter(
+        el => typeof el === 'string'
+    ) as string[]
+
+    const possible_fields = get_field_names(last(path_array), store.schema)
 
     return (
         <QueryKeyValue>
             Select:
             <Grid container alignItems='center'>
-                {selects.map((select: string, i: string) => (
+                {selects.map((select: string, i: number) => (
                     <Grid item key={i}>
                         <Box paddingRight={1}>
                             <Chip
                                 label={title_case(select)}
-                                onDelete={action(e =>
-                                    assoc_splice([...select_path, i], query, true)
-                                )}
+                                onDelete={action(e => {
+                                    const val = safe_path_or({} as any, path_array, query)
+                                    delete val[select]
+                                    assoc_path_mutate(path_array, val, query)
+                                })}
                             />
                         </Box>
                     </Grid>
@@ -151,7 +147,14 @@ const QuerySelect = observer(({ path_array, query }: { path_array: any; query: a
                         value={''}
                         onChange={action(e => {
                             if (!e.target.value) return
-                            assoc_append(select_path, query, e.target.value)
+                            assoc_path_mutate(
+                                path_array,
+                                {
+                                    ...safe_path_or({} as any, path_array, query),
+                                    [e.target.value]: true
+                                },
+                                query
+                            )
                         })}
                         variant='outlined'
                         size='small'
@@ -169,8 +172,8 @@ const QuerySelect = observer(({ path_array, query }: { path_array: any; query: a
 })
 
 const QueryPagination = observer(({ path_array, query }: { path_array: any; query: any }) => {
-    const limit_path = [...path_array, 'limit']
-    const offset_path = [...path_array, 'offset']
+    const limit_path = [...path_array, '$limit']
+    const offset_path = [...path_array, '$offset']
 
     const limit = safe_path_or(undefined, limit_path, query)
     const offset = safe_path_or(undefined, offset_path, query)
@@ -187,7 +190,7 @@ const QueryPagination = observer(({ path_array, query }: { path_array: any; quer
             })}
             variant='outlined'
             label='Limit'
-            style={{ width: '150px' }}
+            style={{ width: '80px' }}
             type='number'
             size='small'
         />
@@ -205,7 +208,7 @@ const QueryPagination = observer(({ path_array, query }: { path_array: any; quer
             })}
             variant='outlined'
             label='Offset'
-            style={{ width: '150px' }}
+            style={{ width: '80px' }}
             type='number'
             size='small'
         />
@@ -214,12 +217,10 @@ const QueryPagination = observer(({ path_array, query }: { path_array: any; quer
     return (
         <QueryKeyValue>
             Pagination:
-            <Grid container alignItems='center'>
-                <Grid item>
-                    <Box marginRight={1}>{limit_input}</Box>
-                </Grid>
-                <Grid item>{offset_input}</Grid>
-            </Grid>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                <div>{limit_input}</div>
+                <div>{offset_input}</div>
+            </div>
         </QueryKeyValue>
     )
 })
@@ -633,12 +634,12 @@ const QuerySubquery = observer(({ path_array, query }: { path_array: any; query:
 const QueryAddSubqueryButton = observer(
     ({
         path_array,
-        query,
-        limit_to_one_subquery = false
-    }: {
+        query
+    }: // limit_to_one_subquery = false
+    {
         path_array: any
         query: any
-        limit_to_one_subquery?: boolean
+        // limit_to_one_subquery?: boolean
     }) => {
         const possible_edge_entity_names = get_possible_edge_entity_names(
             path_array,
@@ -646,15 +647,15 @@ const QueryAddSubqueryButton = observer(
             store.schema
         )
 
-        if (limit_to_one_subquery) {
-            const query_object = safe_path_or(undefined, path_array, query)
-            const child_entities = Object.keys(query_object).filter(key =>
-                is_entity_name(key, store.schema)
-            )
-            if (child_entities.length >= 1) {
-                return null
-            }
-        }
+        // if (limit_to_one_subquery) {
+        //     const query_object = safe_path_or(undefined, path_array, query)
+        //     const child_entities = Object.keys(query_object).filter(key =>
+        //         is_entity_name(key, store.schema)
+        //     )
+        //     if (child_entities.length >= 1) {
+        //         return null
+        //     }
+        // }
 
         return possible_edge_entity_names.length > 0 ? (
             <tr>
