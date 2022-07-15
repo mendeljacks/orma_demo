@@ -32,7 +32,7 @@ jobs:
         name: Frontend
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@master
+            - uses: actions/checkout@main
             - name: Install Dependencies Common
               working-directory: ./common
               run: npm install
@@ -43,15 +43,15 @@ jobs:
               working-directory: ./frontend
               run: npm run build
             - name: Deploy to Firebase PRODUCTION
-              if: github.ref == 'refs/heads/master'
-              uses: w9jds/firebase-action@master
+              if: github.ref == 'refs/heads/main'
+              uses: w9jds/firebase-action@main
               with:
                   args: deploy --project orma-playground
               env:
                   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
                   PROJECT_PATH: ./frontend
             # - name: Deploy to Firebase DEV
-            #   uses: w9jds/firebase-action@master
+            #   uses: w9jds/firebase-action@main
             #   with:
             #       args: deploy --project orma-playground-dev
             #   env:
@@ -64,7 +64,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Repo
-              uses: actions/checkout@master
+              uses: actions/checkout@main
 
             - name: npm i -> backend
               run: cd backend && npm install
