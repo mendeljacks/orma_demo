@@ -24,6 +24,6 @@
         "resolveJsonModule": true,
         "esModuleInterop": true
     },
-    "include": ["src"],
+    "include": ["backend/src"],
     "exclude": ["node_modules"]
 }

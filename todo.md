@@ -1,8 +1,0 @@
-- ts prune
-- add excel mutation features
-- searchable dropdowns
-- enter your own schema by pasting
-- introspector ui
-- dropdown showing existing item for top level bug
-- id always showing bug
-- multiple sql queries not showing for nested tables

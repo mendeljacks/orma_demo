@@ -1,0 +1,76 @@
+name: Build and Deploy
+
+on: push
+
+jobs:
+    # JOB to run change detection
+    changes:
+        runs-on: ubuntu-latest
+        # Set job outputs to values from filter step
+        outputs:
+            backend: ${{ steps.filter.outputs.backend }}
+            frontend: ${{ steps.filter.outputs.frontend }}
+        steps:
+            # For pull requests it's not necessary to checkout the code
+            - uses: actions/checkout@v2
+            - uses: dorny/paths-filter@v2
+              id: filter
+              with:
+                  filters: |
+                      backend:
+                        - 'backend/**'
+                        - 'common/**'
+                        - '.github/**'
+                      frontend:
+                        - 'frontend/**'
+                        - 'common/**'
+                        - '.github/**'
+
+    frontend:
+        needs: changes
+        if: ${{ needs.changes.outputs.frontend == 'true' }}
+        name: Frontend
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - name: Install Dependencies Common
+              working-directory: ./common
+              run: npm install
+            - name: Install Dependencies Frontend
+              working-directory: ./frontend
+              run: npm install --legacy-peer-deps
+            - name: Build
+              working-directory: ./frontend
+              run: npm run build
+            - name: Deploy to Firebase PRODUCTION
+              if: github.ref == 'refs/heads/master'
+              uses: w9jds/firebase-action@master
+              with:
+                  args: deploy --project orma-playground
+              env:
+                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                  PROJECT_PATH: ./frontend
+            # - name: Deploy to Firebase DEV
+            #   uses: w9jds/firebase-action@master
+            #   with:
+            #       args: deploy --project orma-playground-dev
+            #   env:
+            #       PROJECT_PATH: ./frontend
+            #       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    backend:
+        name: Backend
+        needs: changes
+        if: ${{ needs.changes.outputs.backend == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repo
+              uses: actions/checkout@master
+
+            - name: npm i -> backend
+              run: cd backend && npm install
+
+            - name: npm i -> common
+              run: cd common && npm install
+
+            - name: run npm deploy
+              run: cd backend && CI_GCLOUD_SERVICE_ACCOUNT=${{secrets.CI_GCLOUD_SERVICE_ACCOUNT}} HEROKU_API_KEY=${{secrets.HEROKU_API_KEY}} npm run deploy

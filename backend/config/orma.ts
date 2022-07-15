@@ -4,7 +4,7 @@ import { validate_mutation } from 'orma/src/mutate/verifications/mutate_validati
 import { mutation_entity_deep_for_each } from 'orma/src/mutate/helpers/mutate_helpers'
 import { pool, trans } from './pg'
 import cuid from 'cuid'
-import { orma_schema } from '../../generated/orma_schema'
+import { orma_schema } from '../../../common/orma_schema'
 
 /**
  * Standardizes the output so it is always an array of arrays
