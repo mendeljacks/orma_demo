@@ -96,6 +96,14 @@ export const orma_schema = {
         "invisible": false
       },
       {
+        "index_name": "users_resource_id_uq",
+        "is_unique": true,
+        "fields": [
+          "resource_id"
+        ],
+        "invisible": false
+      },
+      {
         "index_name": "users_email_uq",
         "is_unique": true,
         "fields": [
@@ -108,14 +116,6 @@ export const orma_schema = {
         "is_unique": true,
         "fields": [
           "phone"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
         ],
         "invisible": false
       }
@@ -447,18 +447,18 @@ export const orma_schema = {
         "invisible": false
       },
       {
-        "index_name": "groups_name_uq",
-        "is_unique": true,
-        "fields": [
-          "name"
-        ],
-        "invisible": false
-      },
-      {
         "index_name": "groups_resource_id_uq",
         "is_unique": true,
         "fields": [
           "resource_id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "groups_name_uq",
+        "is_unique": true,
+        "fields": [
+          "name"
         ],
         "invisible": false
       }

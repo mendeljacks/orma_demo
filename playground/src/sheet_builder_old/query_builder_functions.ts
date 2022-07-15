@@ -15,10 +15,10 @@ import { assoc_path_mutate } from 'yay_json/build/assoc_path_mutate'
 // Clauses are categorized based on parameters they take, so that cluases in the same category can be swapped without changing anything else.
 // This also helps categorize and talk about groups of clauses
 const clause_types = {
-    simple: ['eq', 'lt', 'gt', 'lte', 'gte', 'like'],
-    array: ['in'],
-    joined: ['and', 'or'],
-    nested: ['any'],
+    simple: ['$eq', '$lt', '$gt', '$lte', '$gte', '$like'],
+    array: ['$in'],
+    joined: ['$and', '$or'],
+    nested: ['$any_path'],
     none: ['none']
 } as const
 
@@ -30,7 +30,7 @@ export const query_path_to_entity_name = (path_array: any, query: any) => {
     for (const i of range(0, path_array.length)) {
         const path_el = path_array[i]
 
-        if (path_el === 'any') {
+        if (path_el === '$any_path') {
             const any_route_path = [...path_array.slice(0, i + 1), 0]
             const any_route = safe_path_or('', any_route_path, query)
 
