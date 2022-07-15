@@ -1,0 +1,23 @@
+{
+    "hosting": {
+        "public": "build",
+        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+        "rewrites": [
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ],
+        "headers": [
+            {
+                "source": "**/*.@(js)",
+                "headers": [
+                    {
+                        "key": "content-type",
+                        "value": "text/javascript"
+                    }
+                ]
+            }
+        ]
+    }
+}
