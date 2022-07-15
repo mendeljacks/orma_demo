@@ -3,6 +3,7 @@ import { orma_query } from 'orma/src/query/query'
 import { OrmaSchema } from 'orma/src/introspector/introspector'
 import { orma_schema } from '../../generated/orma_schema'
 import { format } from 'sql-formatter'
+import { OrmaStatement } from 'orma'
 
 export const store = observable({
     tab: 'Query' as 'Introspect' | 'Query' | 'Mutate',
@@ -15,17 +16,27 @@ export const store = observable({
 
 const reset_query_log = action((query: any, schema: any) => {
     store.sql_queries = ''
-    orma_query(query, schema, async (sqls: any[]) => {
-        sqls.map(sql => {
-            store.sql_queries +=
-                format(sql, {
-                    language: 'spark',
-                    tabWidth: 2,
-                    keywordCase: 'upper',
-                    linesBetweenQueries: 2
-                }) + ';\n\n'
+    orma_query(query, schema, async sqls => {
+        const sql_strings = sqls
+            .map((sql: OrmaStatement) => {
+                return (
+                    format(sql.sql_string, {
+                        language: 'spark',
+                        tabWidth: 2,
+                        keywordCase: 'upper',
+                        linesBetweenQueries: 2
+                    }) + ';\n---------------------------------------\n'
+                )
+            })
+            .join('\n')
+        store.sql_queries += sql_strings
+        return sqls.map(sql => {
+            if (sql.operation === 'query') {
+                const rows = [sql.ast.$select.reduce((acc, val) => ((acc[val] = ''), acc), {})]
+                return rows
+            }
+            return []
         })
-        return []
     })
 })
 
