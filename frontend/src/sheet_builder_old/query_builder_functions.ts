@@ -219,3 +219,17 @@ const get_edges = (entity_name: string, schema: OrmaSchema) => {
     const child_edges = get_child_edges(entity_name, schema)
     return [...parent_edges, ...child_edges]
 }
+
+export const get_order_by_field = (order_by: any): string => {
+    return order_by?.$asc ?? order_by?.$desc
+}
+
+export const swap_order_by_type = (order_by: any) => {
+    if (order_by.$asc !== undefined) {
+        order_by.$desc = order_by.$asc
+        delete order_by.$asc
+    } else {
+        order_by.$asc = order_by.$desc
+        delete order_by.$desc
+    }
+}
