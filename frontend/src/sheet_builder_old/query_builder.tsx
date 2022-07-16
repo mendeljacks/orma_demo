@@ -308,7 +308,7 @@ const QueryWhereValue = observer(
       return <QueryJoinedClause path_array={clause_path} query={query} />
     }
 
-    if (["$any"].includes(clause_type)) {
+    if (["$any_path"].includes(clause_type)) {
       return <QueryNestedClause path_array={clause_path} query={query} />
     }
 
@@ -570,7 +570,7 @@ const QueryJoinedClauseChooser = observer(
         </MenuItem>
         <MenuItem value={"$and"}>And</MenuItem>
         <MenuItem value={"$or"}>Or</MenuItem>
-        <MenuItem value={"$any"}>Any</MenuItem>
+        <MenuItem value={"$any_path"}>Any</MenuItem>
       </TextField>
     )
   }
@@ -612,9 +612,10 @@ const QueryNestedClause = observer(
 
 const QueryNestedPath = observer(
   ({ path_array, query }: { path_array: any; query: any }) => {
-    const nested_path = safe_path_or(undefined, path_array, query)
-      .split(".")
-      .filter((el: any) => el !== "")
+    const nested_path = safe_path_or([], path_array, query).filter(
+      (el: any) => !!el
+    ) as string[]
+
     const edge_tables = get_nested_path_edge_tables(path_array, query)
 
     return (
@@ -626,9 +627,7 @@ const QueryNestedPath = observer(
                 <Box paddingRight={1}>
                   <Chip
                     label={title_case(table_name)}
-                    onDelete={(e) =>
-                      delete_nested_path_element(path_array, i, query)
-                    }
+                    onDelete={action((e) => nested_path.splice(i, 1))}
                   />
                 </Box>
               </Grid>
@@ -645,7 +644,7 @@ const QueryNestedPath = observer(
               value={""}
               onChange={action((e) => {
                 const new_nested_path = [...nested_path, e.target.value]
-                assoc_path_mutate(path_array, new_nested_path.join("."), query)
+                assoc_path_mutate(path_array, new_nested_path, query)
               })}
               variant="outlined"
               size="small"
