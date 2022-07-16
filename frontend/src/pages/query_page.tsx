@@ -18,7 +18,7 @@ export const QueryPage = observer(() => {
             >
                 <Center>
                     <Typography>Visual Query</Typography>
-                    <QueryBuilder path_array={[]} query={store.query} />
+                    <QueryBuilder path_array={[]} query={store.query.query} />
                 </Center>
 
                 <Center>
@@ -28,13 +28,13 @@ export const QueryPage = observer(() => {
                         height='50vh'
                         width='100%'
                         defaultLanguage='json'
-                        value={store.query_input_text}
+                        value={store.query.query_input_text}
                         onChange={action(val => {
                             const json = try_parse_json(val || '', undefined)
                             if (json) {
-                                store.query = json
+                                store.query.query = json
                             }
-                            store.query_input_text = val || ''
+                            store.query.query_input_text = val || ''
                         })}
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />
@@ -46,13 +46,13 @@ export const QueryPage = observer(() => {
                         height='50vh'
                         width='100%'
                         defaultLanguage='sql'
-                        value={store.sql_queries}
+                        value={store.query.sql_queries}
                         onChange={action(val => {
                             const json = try_parse_json(val || '', undefined)
                             if (json) {
-                                store.schema = json
+                                store.introspect.schema = json
                             }
-                            store.schema_input_text = val || ''
+                            store.introspect.schema_input_text = val || ''
                         })}
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />

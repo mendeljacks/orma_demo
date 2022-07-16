@@ -7,15 +7,29 @@ import { OrmaStatement } from 'orma'
 
 export const store = observable({
     tab: 'Query' as 'Introspect' | 'Query' | 'Mutate',
-    query_input_text: '',
-    schema_input_text: '',
-    query: {},
-    schema: orma_schema as unknown as OrmaSchema,
-    sql_queries: ''
+    introspect: {
+        db: 'Postgres' as 'Postgres' | 'Mysql',
+        pg_connection_string: '',
+        mysql: {
+            host: '',
+            port: '',
+            user: '',
+            password: '',
+            database: ''
+        },
+        schema: orma_schema as unknown as OrmaSchema,
+        schema_input_text: ''
+    },
+    query: {
+        query_input_text: '',
+        query: {},
+        sql_queries: ''
+    },
+    mutate: {}
 })
 
 const reset_query_log = action((query: any, schema: any) => {
-    store.sql_queries = ''
+    store.query.sql_queries = ''
     orma_query(query, schema, async sqls => {
         const sql_strings = sqls
             .map((sql: OrmaStatement) => {
@@ -29,10 +43,12 @@ const reset_query_log = action((query: any, schema: any) => {
                 )
             })
             .join('\n')
-        store.sql_queries += sql_strings
+        store.query.sql_queries += sql_strings
         return sqls.map(sql => {
             if (sql.operation === 'query') {
-                const rows = [sql.ast.$select.reduce((acc, val) => ((acc[val] = ''), acc), {})]
+                const rows = [
+                    sql.ast.$select.reduce((acc: any, val: string) => ((acc[val] = ''), acc), {})
+                ]
                 return rows
             }
             return []
@@ -41,11 +57,11 @@ const reset_query_log = action((query: any, schema: any) => {
 })
 
 autorun(() => {
-    let query = toJS(store.query)
-    let schema = toJS(store.schema)
+    let query = toJS(store.query.query)
+    let schema = toJS(store.introspect.schema)
     runInAction(() => {
-        store.query_input_text = JSON.stringify(query, null, 2)
-        store.schema_input_text = JSON.stringify(schema, null, 2)
+        store.query.query_input_text = JSON.stringify(query, null, 2)
+        store.introspect.schema_input_text = JSON.stringify(schema, null, 2)
         reset_query_log(query, schema)
     })
 })

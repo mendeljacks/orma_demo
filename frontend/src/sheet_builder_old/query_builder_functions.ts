@@ -38,7 +38,7 @@ export const query_path_to_entity_name = (path_array: any, query: any) => {
             continue
         }
 
-        const path_el_is_table_name = is_entity_name(path_el, store.schema)
+        const path_el_is_table_name = is_entity_name(path_el, store.introspect.schema)
         if (path_el_is_table_name) {
             entity_name = path_el
             continue
@@ -158,8 +158,8 @@ export const get_nested_path_edge_tables = (path_to_nested_path: any[], query: a
     const this_table_name = query_path_to_entity_name(path_to_any_object, query)
     const edges =
         nested_path.length === 0
-            ? get_edges(this_table_name, store.schema)
-            : get_edges(last(nested_path), store.schema)
+            ? get_edges(this_table_name, store.introspect.schema)
+            : get_edges(last(nested_path), store.introspect.schema)
 
     const edge_tables = edges
         .map(el => el.to_entity)
