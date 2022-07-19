@@ -15,7 +15,7 @@
         "test-coverage": "nodemon --signal SIGKILL --exec nyc --reporter=lcov mocha --package package.json",
         "test": "nodemon --signal SIGKILL --exec mocha --package package.json",
         "coverage-watch": "live-server coverage/lcov-report",
-        "deploy": "git subtree push --prefix frontend/dist origin gh-pages"
+        "deploy": "node -r sucrase/register -e \"require('./src/hosting/deploy.ts').deploy()\""
     },
     "nodemonConfig": {
         "verbose": true,
@@ -46,6 +46,7 @@
         "chai": "^4.3.6",
         "db-migrate": "^0.11.13",
         "db-migrate-pg": "^1.2.2",
+        "git-rev-sync": "^3.0.2",
         "live-server": "^1.2.2",
         "mocha": "^10.0.0",
         "nodemon": "^2.0.18",
