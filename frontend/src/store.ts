@@ -4,6 +4,7 @@ import { OrmaSchema } from 'orma/src/introspector/introspector'
 import { format } from 'sql-formatter'
 import { orma_schema } from '../../common/orma_schema'
 import { OrmaStatement } from 'orma'
+import { AlertColor } from '@mui/material'
 
 export const store = observable({
     tab: 'Query' as 'Introspect' | 'Query' | 'Mutate',
@@ -23,9 +24,19 @@ export const store = observable({
     query: {
         query_input_text: '',
         query: {},
+        response: '',
         sql_queries: ''
     },
-    mutate: {}
+    mutate: {},
+    toast: {
+        toast_content: '',
+        toast_severity: 'success' as AlertColor,
+        toast_auto_hide_duration: 0,
+        toast_is_open: false
+    },
+    shared: {
+        token: ''
+    }
 })
 
 const reset_query_log = action((query: any, schema: any) => {

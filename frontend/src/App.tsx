@@ -1,5 +1,6 @@
 import { Tab, Tabs, Typography } from '@mui/material'
 import { observer } from 'mobx-react-lite'
+import { Toasts } from './components/toasts'
 import { commonTabGroupProps, commonTabProps } from './helpers/helpers'
 import { IntrospectPage } from './pages/introspect_page'
 import { MutatePage } from './pages/mutate_page'
@@ -22,6 +23,7 @@ export const App = observer(() => {
                 {store.tab === 'Query' && <QueryPage />}
                 {store.tab === 'Mutate' && <MutatePage />}
             </div>
+            <Toasts />
         </Center>
     )
 })

@@ -23,7 +23,5 @@
         "downlevelIteration": true,
         "resolveJsonModule": true,
         "esModuleInterop": true
-    },
-    "include": ["backend/src"],
-    "exclude": ["node_modules"]
+    }
 }

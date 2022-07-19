@@ -1,7 +1,8 @@
 import Editor, { Monaco } from '@monaco-editor/react'
-import { Card, TextField, Typography } from '@mui/material'
-import { action } from 'mobx'
+import { Button, Card, TextField, Typography } from '@mui/material'
+import { action, runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
+import { orma_query } from '../helpers/api_helpers'
 import { Center } from '../sheet_builder_old/center'
 import { QueryBuilder } from '../sheet_builder_old/query_builder'
 import { store } from '../store'
@@ -54,6 +55,30 @@ export const QueryPage = observer(() => {
                             }
                             store.introspect.schema_input_text = val || ''
                         })}
+                        theme={true ? 'vs-light' : 'vs-dark'}
+                    />
+                </Center>
+
+                <Center>
+                    <Button
+                        variant='outlined'
+                        onClick={action(async () => {
+                            const response = await orma_query(store.query.query)
+                            runInAction(() => {
+                                store.query.response = response
+                            })
+                        })}
+                    >
+                        Execute Query
+                    </Button>
+                </Center>
+                <Center>
+                    <Typography>Response</Typography>
+                    <Editor
+                        height='50vh'
+                        width='100%'
+                        defaultLanguage='json'
+                        value={JSON.stringify(store.query.response, null, 2)}
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />
                 </Center>

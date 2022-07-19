@@ -5,6 +5,7 @@ import { mutation_entity_deep_for_each } from 'orma/src/mutate/helpers/mutate_he
 import { pool, trans } from './pg'
 import cuid from 'cuid'
 import { orma_schema } from '../../../common/orma_schema'
+import { OrmaSchema } from 'orma/src/introspector/introspector'
 
 /**
  * Standardizes the output so it is always an array of arrays
@@ -33,7 +34,7 @@ export const mutate_handler = mutation => {
         apply_inherit_operations_macro(mutation)
         add_resource_ids(mutation)
 
-        const errors = validate_mutation(mutation, orma_schema)
+        const errors = validate_mutation(mutation, orma_schema as unknown as OrmaSchema)
         if (errors.length > 0) {
             return Promise.reject(errors)
         }
@@ -42,14 +43,14 @@ export const mutate_handler = mutation => {
         const mutation_results = await orma_mutate(
             mutation,
             sqls => byo_query_fn(sqls, connection),
-            orma_schema
+            orma_schema as unknown as OrmaSchema
         )
         return mutation_results
     })
 }
 
 export const query_handler = query => {
-    return orma_query(query, orma_schema, strings =>
+    return orma_query(query, orma_schema as unknown as OrmaSchema, strings =>
         byo_query_fn(strings.map(s => ({ sql_string: s })))
     )
 }

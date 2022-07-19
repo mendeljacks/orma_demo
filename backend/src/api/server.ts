@@ -5,7 +5,7 @@ import { mutate_handler, query_handler } from '../config/orma'
 import { introspect } from '../scripts/introspect'
 import { login_user } from './login'
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 export const start = async (env: 'production' | 'development') => {
     const app = express()
