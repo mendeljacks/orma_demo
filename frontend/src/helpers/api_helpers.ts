@@ -36,7 +36,7 @@ const get_mutation_root_table = (mutation: any) =>
 const get_query_root_tables = (query: any) =>
     keys(query).filter((key: any) => type(query[key]) === 'Object' && key?.[0] !== '$')
 
-export const orma_query = async (query: any) => {
+export const orma_query = wrap_loading(async (query: any) => {
     const table_name = get_query_root_tables(query)
 
     const start = window.performance.now()
@@ -72,7 +72,7 @@ export const orma_query = async (query: any) => {
 
         return Promise.reject(error)
     }
-}
+})
 
 export const orma_mutate = async (mutation: any) => {
     const table_name = get_mutation_root_table(mutation)

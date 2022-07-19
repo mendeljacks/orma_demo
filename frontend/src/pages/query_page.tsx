@@ -4,6 +4,7 @@ import { action, runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { orma_query } from '../helpers/api_helpers'
 import { Center } from '../sheet_builder_old/center'
+import { is_loading } from '../sheet_builder_old/is_loading'
 import { QueryBuilder } from '../sheet_builder_old/query_builder'
 import { store } from '../store'
 import { try_parse_json } from '../try_parse_json'
@@ -69,7 +70,9 @@ export const QueryPage = observer(() => {
                             })
                         })}
                     >
-                        Execute Query
+                        {is_loading(orma_query, [store.query.query])
+                            ? 'Loading...'
+                            : 'Execute Query'}
                     </Button>
                 </Center>
                 <Center>
