@@ -15,7 +15,7 @@
         "test-coverage": "nodemon --signal SIGKILL --exec nyc --reporter=lcov mocha --package package.json",
         "test": "nodemon --signal SIGKILL --exec mocha --package package.json",
         "coverage-watch": "live-server coverage/lcov-report",
-        "deploy": "node -r sucrase/register -e \"require('./src/hosting/deploy.ts').deploy()\""
+        "deploy": "node -r ts-node/register -e \"require('./src/hosting/deploy.ts').deploy()\""
     },
     "nodemonConfig": {
         "verbose": true,

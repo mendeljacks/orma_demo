@@ -33,7 +33,7 @@ const heroku = async version => {
         'docker',
         'build',
         '-f',
-        'backend/helpers/hosting/Dockerfile',
+        'backend/src/hosting/Dockerfile',
         '--tag',
         docker_image_path2,
         '.'
