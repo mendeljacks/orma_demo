@@ -1,5 +1,4 @@
 import dbMigrate from 'db-migrate'
-import env from '../../env.json'
 
 export const reset = async () => {
     try {
@@ -7,7 +6,7 @@ export const reset = async () => {
             config: {
                 dev: {
                     driver: 'pg',
-                    connectionString: env.pg,
+                    connectionString: process.env.pg,
                     ssl: true
                 }
             }

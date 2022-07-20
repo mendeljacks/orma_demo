@@ -33,7 +33,7 @@ export const login_user = async (email, password) => {
     const token = await new Promise((resolve, reject) => {
         jwt.sign(
             { username: email },
-            env.jwt_secret,
+            process.env.jwt_secret,
             /*{expiresIn: 60},*/ (err, token) => {
                 if (err) {
                     reject(err)
