@@ -11,7 +11,7 @@ const get_base_url = (host: string) => {
     }
 
     const base_urls = {
-        'myfrontend.ca': 'https://mybackend.com'
+        'orma-playground.web.app': 'https://orma-demo.herokuapp.com'
     } as { [key: string]: string }
 
     return base_urls[host]
