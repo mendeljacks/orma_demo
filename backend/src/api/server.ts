@@ -15,6 +15,10 @@ export const start = async (env: 'production' | 'development') => {
     app.use(express.json({ limit: '50mb' }))
     app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
+    app.get(
+        '/',
+        handler(() => 'Welcome.')
+    )
     app.post(
         '/login',
         handler((req, res) => {
