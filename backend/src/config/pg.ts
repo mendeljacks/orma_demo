@@ -8,13 +8,15 @@ types.setTypeParser(20, function (val) {
 types.setTypeParser(1084, date => date)
 types.setTypeParser(1114, date => date)
 
-export const pool = new Pool({
-    connectionString: process.env.pg,
-    types,
-    ssl: { rejectUnauthorized: false }
-})
+export const get_pool_pg = (connectionString: string) => {
+    return new Pool({
+        connectionString,
+        types,
+        ssl: { rejectUnauthorized: false }
+    })
+}
 
-export const trans = async fn => {
+export const pg_trans = pool => async fn => {
     const connection = await pool
         .connect()
         .catch(err => Promise.reject({ message: 'Could not start connection', err }))

@@ -306,18 +306,18 @@ export const orma_schema = {
         "invisible": false
       },
       {
-        "index_name": "permissions_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
-        ],
-        "invisible": false
-      },
-      {
         "index_name": "permissions_name_uq",
         "is_unique": true,
         "fields": [
           "name"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "permissions_resource_id_uq",
+        "is_unique": true,
+        "fields": [
+          "resource_id"
         ],
         "invisible": false
       }

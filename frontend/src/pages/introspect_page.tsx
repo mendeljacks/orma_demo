@@ -1,17 +1,17 @@
 import Editor from '@monaco-editor/react'
-import { Button, Card, Tab, Tabs, TextField, Typography } from '@mui/material'
-import { action } from 'mobx'
+import { Button, Card, CircularProgress, Tab, Tabs, TextField, Typography } from '@mui/material'
+import { action, runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { commonTabGroupProps, commonTabProps } from '../helpers/helpers'
+import { commonTabGroupProps } from '../helpers/helpers'
 import { Center } from '../sheet_builder_old/center'
 import { store } from '../store'
 import { try_parse_json } from '../try_parse_json'
-import { MutatePage } from './mutate_page'
-import { QueryPage } from './query_page'
 // @ts-ignore
 import mysql from '../assets/mysql.png'
 // @ts-ignore
 import postgres from '../assets/postgres.png'
+import { orma_introspect } from '../helpers/api_helpers'
+import { is_loading } from '../sheet_builder_old/is_loading'
 
 export const IntrospectPage = observer(() => {
     return (
@@ -37,7 +37,17 @@ export const IntrospectPage = observer(() => {
                         {store.introspect.db === 'Mysql' && <MysqlAuth />}
                         {store.introspect.db === 'Postgres' && <PostgresAuth />}
                     </Center>
-                    <Button variant='outlined'>Introspect Database</Button>
+                    <Button
+                        variant='outlined'
+                        onClick={action(async () => {
+                            const result = await orma_introspect()
+                            runInAction(() => {
+                                store.introspect.schema = result
+                            })
+                        })}
+                    >
+                        {is_loading(orma_introspect, []) ? <CircularProgress /> : 'Introspect'}
+                    </Button>
                 </div>
                 <Center>
                     <Typography>Orma Schema</Typography>
@@ -68,8 +78,8 @@ const PostgresAuth = observer(() => {
             <Typography>Pg Connection String</Typography>
             <TextField
                 style={{ width: '800px' }}
-                onChange={action(e => (store.introspect.pg_connection_string = e.target.value))}
-                value={store.introspect.pg_connection_string}
+                onChange={action(e => (store.introspect.pg.connection_string = e.target.value))}
+                value={store.introspect.pg.connection_string}
             />
         </div>
     )

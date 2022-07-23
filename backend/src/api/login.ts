@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import * as env from '../../env.json'
 import { query_handler } from '../config/orma'
 
 export const login_user = async (email, password) => {
@@ -22,7 +21,7 @@ export const login_user = async (email, password) => {
         }
     }
 
-    const { users } = (await query_handler(query)) as any
+    const { users } = (await query_handler(query, undefined)) as any
     if (users.length !== 1) {
         return Promise.reject('Incorrect email')
     }

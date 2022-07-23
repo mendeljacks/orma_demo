@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import cuid from 'cuid'
 import { describe, test, beforeEach } from 'mocha'
 import { mutate_handler, query_handler } from '../config/orma'
+import { get_pool_pg, pg_trans } from '../config/pg'
 import { reset } from '../scripts/reset'
 
 describe('Crud Orma', () => {
@@ -22,7 +23,11 @@ describe('Crud Orma', () => {
             users: [user]
         }
 
-        const mutate_response = await mutate_handler(mutation)
+        const mutate_response = await mutate_handler(
+            mutation,
+            get_pool_pg(process.env.pg),
+            pg_trans(get_pool_pg(process.env.pg))
+        )
         expect(mutate_response.users.length).to.equal(1)
     })
     test('Create a user select created_at updated_at', async () => {
@@ -36,7 +41,11 @@ describe('Crud Orma', () => {
             users: [user]
         }
 
-        const mutate_response = await mutate_handler(mutation)
+        const mutate_response = await mutate_handler(
+            mutation,
+            get_pool_pg(process.env.pg),
+            pg_trans(get_pool_pg(process.env.pg))
+        )
 
         const body = {
             users: {
@@ -51,7 +60,7 @@ describe('Crud Orma', () => {
             }
         }
 
-        const result: any = await query_handler(body)
+        const result: any = await query_handler(body, undefined)
 
         expect(result?.users[0].created_at).to.be.a('string')
         expect(result?.users[0].updated_at).to.be.a('string')
@@ -81,7 +90,11 @@ describe('Crud Orma', () => {
             users: [user]
         }
 
-        const mutate_response = await mutate_handler(mutation)
+        const mutate_response = await mutate_handler(
+            mutation,
+            get_pool_pg(process.env.pg),
+            pg_trans(get_pool_pg(process.env.pg))
+        )
         expect(mutate_response.users.length).to.equal(1)
     })
 })

@@ -10,7 +10,7 @@ export const store = observable({
     tab: 'Query' as 'Introspect' | 'Query' | 'Mutate',
     introspect: {
         db: 'Postgres' as 'Postgres' | 'Mysql',
-        pg_connection_string: '',
+        pg: { connection_string: '', database: 'public' },
         mysql: {
             host: '',
             port: '',

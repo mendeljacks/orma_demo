@@ -1,7 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import { handler } from 'express_phandler'
-import { mutate_handler, query_handler } from '../config/orma'
+import { get_pool_trans, introspect_handler, mutate_handler, query_handler } from '../config/orma'
 import { introspect } from '../scripts/introspect'
 import { login_user } from './login'
 
@@ -29,14 +29,27 @@ export const start = async (env: 'production' | 'development') => {
     app.post(
         '/query',
         handler(async (req, res) => {
-            const results = await query_handler(req.body)
+            const { pool } = get_pool_trans(req.query)
+            const results = await query_handler(req.body, pool)
             return results
         })
     )
 
     app.post(
         '/mutate',
-        handler(async req => mutate_handler(req.body))
+        handler(async req => {
+            const { pool, trans } = get_pool_trans(req.query)
+            mutate_handler(req.body, pool, trans)
+        })
+    )
+
+    app.post(
+        '/introspect',
+        handler(async req => {
+            const { pool, db } = get_pool_trans(req.query)
+            const result = await introspect_handler(db, pool, req.query.db_type)
+            return result
+        })
     )
 
     await new Promise(r => app.listen(port, r as any))

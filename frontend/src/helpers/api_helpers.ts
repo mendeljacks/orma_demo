@@ -22,6 +22,11 @@ export const axios_post = wrap_loading(async (url, body) => {
         method: 'POST',
         url: get_base_url(window.location.host) + url,
         data: body,
+        params: {
+            db_type: store.introspect.db.toLowerCase(),
+            pg: JSON.stringify(store.introspect.pg),
+            mysql: JSON.stringify(store.introspect.mysql)
+        },
         headers: { Authorization: 'Bearer ' + store.shared.token }
     }
 
@@ -100,6 +105,33 @@ export const orma_mutate = async (mutation: any) => {
             `MUTATE (${time}ms)`,
             table_name,
             mutation,
+            error?.response?.data || error
+        )
+
+        const toast_message = get_error_toast_message(error)
+        if (toast_message) {
+            show_toast('error', toast_message)
+        }
+
+        return Promise.reject(error)
+    }
+}
+
+export const orma_introspect = async () => {
+    const start = window.performance.now()
+    try {
+        const res = await axios_post(`/introspect`, {})
+        const end = window.performance.now()
+        const time = Math.round(end - start)
+        console.info('%c%s', `color: green; font-size: 16px;`, `INTROSPECT (${time}ms)`, res)
+        return res
+    } catch (error: any) {
+        const end = window.performance.now()
+        const time = Math.round(end - start)
+        console.info(
+            '%c%s',
+            `color: red; font-size: 16px;`,
+            `INTROSPECT (${time}ms)`,
             error?.response?.data || error
         )
 
