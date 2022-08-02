@@ -22,6 +22,7 @@
         "orma": "^1.0.111",
         "ramda": "^0.28.0",
         "react": "^18.0.0",
+        "react-datasheet": "^1.4.12",
         "react-dom": "^18.0.0",
         "react-icons": "^4.4.0",
         "sql-formatter": "^8.0.2",

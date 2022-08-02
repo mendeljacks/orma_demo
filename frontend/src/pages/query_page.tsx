@@ -15,7 +15,7 @@ export const QueryPage = observer(() => {
             <Card
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr'
+                    gridTemplateColumns: '1fr 1fr'
                 }}
             >
                 <Center>
@@ -24,7 +24,7 @@ export const QueryPage = observer(() => {
                 </Center>
 
                 <Center>
-                    <Typography>Query Input Text</Typography>
+                    <Typography>JSON</Typography>
 
                     <Editor
                         height='50vh'
@@ -43,24 +43,15 @@ export const QueryPage = observer(() => {
                 </Center>
 
                 <Center>
-                    <Typography>SQL Query</Typography>
+                    <Typography>SQL</Typography>
                     <Editor
                         height='50vh'
                         width='100%'
                         defaultLanguage='sql'
                         value={store.query.sql_queries}
-                        onChange={action(val => {
-                            const json = try_parse_json(val || '', undefined)
-                            if (json) {
-                                store.introspect.schema = json
-                            }
-                            store.introspect.schema_input_text = val || ''
-                        })}
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />
-                </Center>
 
-                <Center>
                     <Button
                         variant='outlined'
                         onClick={action(async () => {
@@ -84,6 +75,17 @@ export const QueryPage = observer(() => {
                         value={JSON.stringify(store.query.response, null, 2)}
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />
+                    <Button
+                        variant='outlined'
+                        onClick={action(async () => {
+                            const response = await orma_query(store.query.query)
+                            runInAction(() => {
+                                store.query.response = response
+                            })
+                        })}
+                    >
+                        Edit as mutation
+                    </Button>
                 </Center>
             </Card>
         </div>

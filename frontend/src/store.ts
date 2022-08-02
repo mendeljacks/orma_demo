@@ -7,7 +7,7 @@ import { OrmaStatement } from 'orma'
 import { AlertColor } from '@mui/material'
 
 export const store = observable({
-    tab: 'Query' as 'Introspect' | 'Query' | 'Mutate',
+    tab: 'Mutate' as 'Introspect' | 'Query' | 'Mutate',
     introspect: {
         db: 'Postgres' as 'Postgres' | 'Mysql',
         pg: { connection_string: '', database: 'public' },
@@ -27,7 +27,22 @@ export const store = observable({
         response: '',
         sql_queries: ''
     },
-    mutate: {},
+    mutate: {
+        sql_queries: '',
+        paste_grid: [
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }],
+            [{ value: '' }, { value: '' }]
+        ] as any[],
+        mutation: {},
+        response: {}
+    },
     toast: {
         toast_content: '',
         toast_severity: 'success' as AlertColor,
