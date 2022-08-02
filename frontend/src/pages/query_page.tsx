@@ -84,7 +84,7 @@ export const QueryPage = observer(() => {
                             })
                         })}
                     >
-                        Edit as mutation
+                        Populate Mutation
                     </Button>
                 </Center>
             </Card>

@@ -1,9 +1,20 @@
+import { Typography } from '@mui/material'
 import { action } from 'mobx'
 import ReactDataSheet from 'react-datasheet'
 import 'react-datasheet/lib/react-datasheet.css'
+import { Center } from '../sheet_builder_old/center'
 import { store } from '../store'
 
 export const DataSheet = () => {
+    if (store.mutate.paste_grid.length === 0) {
+        return (
+            <Center>
+                <Typography style={{ margin: '20px' }} variant='h5'>
+                    Populate mutation to begin editing
+                </Typography>
+            </Center>
+        )
+    }
     return (
         <div
             style={{
@@ -15,17 +26,17 @@ export const DataSheet = () => {
             }}
         >
             <ReactDataSheet
-                data={store.mutate.paste_grid}
+                data={store.mutate.paste_grid as any}
                 valueRenderer={(cell: any) => String(cell.value)}
                 sheetRenderer={(props: any) => (
                     <table className={props.className + ' my-awesome-extra-class'}>
-                        <thead>
+                        {/* <thead>
                             <tr>
                                 <th className='action-cell' />
                                 <th style={{ width: '200px' }}>Sku</th>
                                 <th style={{ width: '100px' }}>Quantity</th>
                             </tr>
-                        </thead>
+                        </thead> */}
                         <tbody>{props.children}</tbody>
                     </table>
                 )}
