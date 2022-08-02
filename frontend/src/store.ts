@@ -7,6 +7,7 @@ import { OrmaStatement } from 'orma'
 import { AlertColor } from '@mui/material'
 import ReactDataSheet from 'react-datasheet'
 import { orma_mutate } from 'orma/src/mutate/mutate'
+import { json_to_aoa } from 'yay_json'
 
 export const store = observable({
     tab: 'Mutate' as 'Introspect' | 'Query' | 'Mutate',
@@ -98,6 +99,7 @@ autorun(() => {
     let schema = toJS(store.introspect.schema)
     runInAction(() => {
         store.mutate.mutation_input_text = JSON.stringify(mutation, null, 2)
+        store.mutate.paste_grid = json_to_aoa(mutation).map(_ => _.map((x: any) => ({ value: x })))
         reset_mutation_log(store.mutate.mutation, schema)
     })
 })
