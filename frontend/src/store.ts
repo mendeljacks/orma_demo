@@ -79,7 +79,7 @@ const fake_sql_fn = async (sqls: any, query: any) => {
 
 const reset_mutation_log = action((mutation: any, schema: any) => {
     store.mutate.sql_queries = ''
-    orma_mutate(mutation, sqls => fake_sql_fn(sqls, mutation), schema)
+    orma_mutate(mutation, sqls => fake_sql_fn(sqls, store.mutate), schema)
 })
 // When query or schema changes, automatically update the text input versions
 autorun(() => {
@@ -98,7 +98,7 @@ autorun(() => {
     let schema = toJS(store.introspect.schema)
     runInAction(() => {
         store.mutate.mutation_input_text = JSON.stringify(mutation, null, 2)
-        reset_mutation_log(mutation, schema)
+        reset_mutation_log(store.mutate.mutation, schema)
     })
 })
 

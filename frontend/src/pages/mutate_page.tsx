@@ -1,12 +1,11 @@
-import Editor, { Monaco } from '@monaco-editor/react'
-import { Button, Card, TextField, Typography } from '@mui/material'
+import Editor from '@monaco-editor/react'
+import { Button, Card, Typography } from '@mui/material'
 import { action, runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { DataSheet } from '../components/data_sheet'
 import { orma_mutate } from '../helpers/api_helpers'
 import { Center } from '../sheet_builder_old/center'
 import { is_loading } from '../sheet_builder_old/is_loading'
-import { QueryBuilder } from '../sheet_builder_old/query_builder'
 import { store } from '../store'
 import { try_parse_json } from '../try_parse_json'
 
@@ -29,13 +28,13 @@ export const MutatePage = observer(() => {
                         height='50vh'
                         width='100%'
                         defaultLanguage='json'
-                        value={store.query.query_input_text}
+                        value={store.mutate.mutation_input_text}
                         onChange={action(val => {
                             const json = try_parse_json(val || '', undefined)
                             if (json) {
-                                store.query.query = json
+                                store.mutate.mutation = json
                             }
-                            store.query.query_input_text = val || ''
+                            store.mutate.mutation_input_text = val || ''
                         })}
                         theme={true ? 'vs-light' : 'vs-dark'}
                     />
