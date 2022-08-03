@@ -74,6 +74,13 @@ const fake_sql_fn = async (sqls: any, query: any) => {
             ]
             return rows
         }
+        if (sql.operation === 'create') {
+            const rows = sql.ast.$values.map((values: string[], i: number) => {
+                return { id: i }
+            }, {})
+
+            return rows
+        }
         return []
     })
 }
