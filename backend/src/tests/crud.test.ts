@@ -26,7 +26,8 @@ describe('Crud Orma', () => {
         const mutate_response = await mutate_handler(
             mutation,
             get_pool_pg(process.env.pg),
-            pg_trans(get_pool_pg(process.env.pg))
+            pg_trans(get_pool_pg(process.env.pg)),
+            'postgres'
         )
         expect(mutate_response.users.length).to.equal(1)
     })
@@ -44,7 +45,8 @@ describe('Crud Orma', () => {
         const mutate_response = await mutate_handler(
             mutation,
             get_pool_pg(process.env.pg),
-            pg_trans(get_pool_pg(process.env.pg))
+            pg_trans(get_pool_pg(process.env.pg)),
+            'postgres'
         )
 
         const body = {
@@ -60,7 +62,7 @@ describe('Crud Orma', () => {
             }
         }
 
-        const result: any = await query_handler(body, undefined)
+        const result: any = await query_handler(body, undefined, 'postgres')
 
         expect(result?.users[0].created_at).to.be.a('string')
         expect(result?.users[0].updated_at).to.be.a('string')
@@ -93,7 +95,8 @@ describe('Crud Orma', () => {
         const mutate_response = await mutate_handler(
             mutation,
             get_pool_pg(process.env.pg),
-            pg_trans(get_pool_pg(process.env.pg))
+            pg_trans(get_pool_pg(process.env.pg)),
+            'postgres'
         )
         expect(mutate_response.users.length).to.equal(1)
     })

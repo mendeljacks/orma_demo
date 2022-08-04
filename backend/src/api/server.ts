@@ -29,8 +29,8 @@ export const start = async (env: 'production' | 'development') => {
     app.post(
         '/query',
         handler(async (req, res) => {
-            const { pool } = get_pool_trans(req.query)
-            const results = await query_handler(req.body, pool)
+            const { pool, db_type } = await get_pool_trans(req.query)
+            const results = await query_handler(req.body, pool, db_type)
             return results
         })
     )
@@ -38,15 +38,15 @@ export const start = async (env: 'production' | 'development') => {
     app.post(
         '/mutate',
         handler(async req => {
-            const { pool, trans } = get_pool_trans(req.query)
-            mutate_handler(req.body, pool, trans)
+            const { pool, trans, db_type } = await get_pool_trans(req.query)
+            mutate_handler(req.body, pool, trans, db_type)
         })
     )
 
     app.post(
         '/introspect',
         handler(async req => {
-            const { pool, db } = get_pool_trans(req.query)
+            const { pool, db } = await get_pool_trans(req.query)
             const result = await introspect_handler(db, pool, req.query.db_type)
             return result
         })

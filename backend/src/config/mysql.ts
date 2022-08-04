@@ -1,6 +1,6 @@
 import mysql from 'promise-mysql'
 
-export const get_pool_mysql = ({
+export const get_pool_mysql = async ({
     host,
     user,
     password,
@@ -25,7 +25,7 @@ export const get_pool_mysql = ({
         multipleStatements: true,
         timezone: 'utc'
     }
-    const pool = mysql.createPool(config)
+    const pool = await mysql.createPool(config)
     return pool
 }
 

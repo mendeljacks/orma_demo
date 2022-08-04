@@ -96,14 +96,6 @@ export const orma_schema = {
         "invisible": false
       },
       {
-        "index_name": "users_email_uq",
-        "is_unique": true,
-        "fields": [
-          "email"
-        ],
-        "invisible": false
-      },
-      {
         "index_name": "users_phone_uq",
         "is_unique": true,
         "fields": [
@@ -116,6 +108,14 @@ export const orma_schema = {
         "is_unique": true,
         "fields": [
           "resource_id"
+        ],
+        "invisible": false
+      },
+      {
+        "index_name": "users_email_uq",
+        "is_unique": true,
+        "fields": [
+          "email"
         ],
         "invisible": false
       }

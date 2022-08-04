@@ -6,7 +6,7 @@ import { get_pool_pg } from '../config/pg'
 export const introspect = async db => {
     const orma_schema = await orma_introspect(
         'public',
-        sqls => byo_query_fn(sqls, get_pool_pg(process.env.pg)),
+        sqls => byo_query_fn(sqls, get_pool_pg(process.env.pg), 'postgres'),
         { db_type: 'postgres' }
     )
     try {
