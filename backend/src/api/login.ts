@@ -21,7 +21,7 @@ export const login_user = async (email, password) => {
         }
     }
 
-    const { users } = (await query_handler(query, undefined)) as any
+    const { users } = (await query_handler(query, undefined, 'postgres')) as any
     if (users.length !== 1) {
         return Promise.reject('Incorrect email')
     }

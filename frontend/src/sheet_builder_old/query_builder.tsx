@@ -121,7 +121,7 @@ const QueryArray = observer(({ children }: { children: any }) => {
 
 const QuerySelect = observer(({ path_array, query }: { path_array: any; query: any }) => {
     const subquery = safe_path_or({} as any, path_array, query)
-    const selects = get_select(subquery, path_array, store.introspect.schema).filter(
+    const selects = get_select(subquery, path_array, query, store.introspect.schema).filter(
         el => typeof el === 'string'
     ) as string[]
 
