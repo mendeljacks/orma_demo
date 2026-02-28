@@ -44,11 +44,11 @@ jobs:
               run: npm run build
             - name: Deploy to Firebase PRODUCTION
               if: github.ref == 'refs/heads/main'
-              uses: w9jds/firebase-action@v11.30.1
+              uses: w9jds/firebase-action@master
               with:
                   args: deploy --project orma-playground
               env:
-                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
                   PROJECT_PATH: ./frontend
     backend:
         name: Backend
@@ -58,6 +58,9 @@ jobs:
         steps:
             - name: Checkout Repo
               uses: actions/checkout@main
+
+            - name: Install Heroku CLI
+              run: curl https://cli-assets.heroku.com/install.sh | sh
 
             - name: npm i -> backend
               run: cd backend && npm install
