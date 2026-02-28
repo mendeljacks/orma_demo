@@ -79,7 +79,7 @@ export const orma_query = wrap_loading(async (query: any) => {
     }
 })
 
-export const orma_mutate = async (mutation: any) => {
+export const orma_mutate = wrap_loading(async (mutation: any) => {
     const table_name = get_mutation_root_table(mutation)
 
     const start = window.performance.now()
@@ -115,7 +115,7 @@ export const orma_mutate = async (mutation: any) => {
 
         return Promise.reject(error)
     }
-}
+})
 
 export const orma_introspect = async () => {
     const start = window.performance.now()

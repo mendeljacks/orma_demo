@@ -39,7 +39,7 @@ export const start = async (env: 'production' | 'development') => {
         '/mutate',
         handler(async req => {
             const { pool, trans, db_type } = await get_pool_trans(req.query)
-            mutate_handler(req.body, pool, trans, db_type)
+            return mutate_handler(req.body, pool, trans, db_type)
         })
     )
 
