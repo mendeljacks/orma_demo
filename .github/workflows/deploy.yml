@@ -1,8 +1,6 @@
 name: Build and Deploy
 
-on:
-  push:
-    branches: [main]
+on: push
 
 jobs:
     # JOB to run change detection
@@ -44,14 +42,14 @@ jobs:
             - name: Build
               working-directory: ./frontend
               run: npm run build
-            - name: Copy index.html to 404.html for SPA routing
-              run: cp frontend/dist/index.html frontend/dist/404.html
-            - name: Deploy to GitHub Pages
+            - name: Deploy to Firebase PRODUCTION
               if: github.ref == 'refs/heads/main'
-              uses: peaceiris/actions-gh-pages@v4
+              uses: w9jds/firebase-action@v11.29.0
               with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./frontend/dist
+                  args: deploy --project orma-playground
+              env:
+                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                  PROJECT_PATH: ./frontend
     backend:
         name: Backend
         needs: changes
