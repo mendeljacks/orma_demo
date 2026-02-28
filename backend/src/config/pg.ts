@@ -12,7 +12,7 @@ export const get_pool_pg = (connectionString: string) => {
     return new Pool({
         connectionString,
         types,
-        ssl: { rejectUnauthorized: false }
+        ssl: process.env.PGSSLMODE === 'disable' ? false : { rejectUnauthorized: false }
     })
 }
 

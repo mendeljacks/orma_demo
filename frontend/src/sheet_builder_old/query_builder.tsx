@@ -1,8 +1,8 @@
 import { Box, Chip, Grid, IconButton, ListSubheader, MenuItem, TextField } from '@mui/material'
 import { action, observable, toJS } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { get_field_names, is_entity_name, is_field_name } from 'orma/src/helpers/schema_helpers'
-import { get_select } from 'orma/src/query/macros/select_macro'
+import { get_field_names, is_entity_name, is_field_name } from 'orma/build/helpers/schema_helpers'
+import { get_converted_select, get_new_select } from 'orma/build/query/macros/select_macro'
 import { dropLast, last } from 'ramda'
 import React from 'react'
 import { MdAdd, MdArrowDownward, MdArrowUpward, MdChevronRight, MdClose } from 'react-icons/md'
@@ -121,7 +121,7 @@ const QueryArray = observer(({ children }: { children: any }) => {
 
 const QuerySelect = observer(({ path_array, query }: { path_array: any; query: any }) => {
     const subquery = safe_path_or({} as any, path_array, query)
-    const selects = get_select(subquery, path_array, query, store.introspect.schema).filter(
+    const selects = [...get_converted_select(subquery), ...get_new_select(subquery, path_array, query, store.introspect.schema)].filter(
         el => typeof el === 'string'
     ) as string[]
 

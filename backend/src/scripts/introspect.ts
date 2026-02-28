@@ -7,7 +7,7 @@ export const introspect = async db => {
     const orma_schema = await orma_introspect(
         'public',
         sqls => byo_query_fn(sqls, get_pool_pg(process.env.pg), 'postgres'),
-        { db_type: 'postgres' }
+        { database_type: 'postgres' }
     )
     try {
         const str = `export const orma_schema = ${JSON.stringify(orma_schema, null, 2)} as const`

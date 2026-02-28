@@ -1,16 +1,22 @@
 import { action, autorun, observable, runInAction, toJS } from 'mobx'
-import { orma_query } from 'orma/src/query/query'
-import { OrmaSchema } from 'orma/src/introspector/introspector'
+import { orma_query } from 'orma'
+import type { OrmaSchema } from 'orma/build/types/schema/schema_types'
 import { format } from 'sql-formatter'
 import { orma_schema } from '../../common/orma_schema'
 import { OrmaStatement } from 'orma'
 import { AlertColor } from '@mui/material'
 import ReactDataSheet from 'react-datasheet'
-import { orma_mutate } from 'orma/src/mutate/mutate'
+import { orma_mutate } from 'orma'
 import { json_to_aoa } from 'yay_json'
 
+const default_query = { users: { id: true, first_name: true, last_name: true } }
+const default_mutation = {
+    $operation: 'create',
+    users: [{ email: 'user@example.com', first_name: 'John', last_name: 'Doe', password: 'password' }]
+}
+
 export const store = observable({
-    tab: 'Mutate' as 'Introspect' | 'Query' | 'Mutate',
+    tab: 'Connect' as 'Connect' | 'Query' | 'Mutate',
     introspect: {
         db: 'Postgres' as 'Postgres' | 'Mysql',
         pg: { connection_string: '', database: 'public' },
@@ -25,16 +31,16 @@ export const store = observable({
         schema_input_text: ''
     },
     query: {
-        query_input_text: '',
-        query: {},
+        query_input_text: JSON.stringify(default_query, null, 2),
+        query: default_query as any,
         response: '',
         sql_queries: ''
     },
     mutate: {
         sql_queries: '',
         paste_grid: [] as { value: '' }[][],
-        mutation: {},
-        mutation_input_text: '',
+        mutation: default_mutation as any,
+        mutation_input_text: JSON.stringify(default_mutation, null, 2),
         response: {}
     },
     toast: {
@@ -48,9 +54,14 @@ export const store = observable({
     }
 })
 
-const reset_query_log = action((query: any, schema: any) => {
+export const reset_query_log = action((query: any, schema: any) => {
     store.query.sql_queries = ''
-    orma_query(query, schema, sqls => fake_sql_fn(sqls, query))
+    if (!query || Object.keys(query).filter(k => !k.startsWith('$')).length === 0) return
+    try {
+        orma_query(query, schema, sqls => fake_sql_fn(sqls, store.query))
+    } catch (e) {
+        // ignore invalid query during editing
+    }
 })
 
 const fake_sql_fn = async (sqls: any, query: any) => {
@@ -58,7 +69,7 @@ const fake_sql_fn = async (sqls: any, query: any) => {
         .map((sql: OrmaStatement) => {
             return (
                 format(sql.sql_string, {
-                    language: 'spark',
+                    language: 'postgresql',
                     tabWidth: 2,
                     keywordCase: 'upper',
                     linesBetweenQueries: 2
@@ -85,30 +96,36 @@ const fake_sql_fn = async (sqls: any, query: any) => {
     })
 }
 
-const reset_mutation_log = action((mutation: any, schema: any) => {
+export const reset_mutation_log = action((mutation: any, schema: any) => {
     store.mutate.sql_queries = ''
-    orma_mutate(mutation, sqls => fake_sql_fn(sqls, store.mutate), schema)
+    if (!mutation || Object.keys(mutation).filter(k => !k.startsWith('$')).length === 0) return
+    try {
+        orma_mutate(mutation, sqls => fake_sql_fn(sqls, store.mutate), schema)
+    } catch (e) {
+        // ignore invalid mutation during editing
+    }
 })
-// When query or schema changes, automatically update the text input versions
-autorun(() => {
-    let query = toJS(store.query.query)
-    let schema = toJS(store.introspect.schema)
-    runInAction(() => {
-        store.query.query_input_text = JSON.stringify(query, null, 2)
-        store.introspect.schema_input_text = JSON.stringify(schema, null, 2)
-        reset_query_log(query, schema)
-    })
+// Exported action to sync schema text (called when schema changes externally, e.g. introspect)
+export const sync_schema_text = action(() => {
+    store.introspect.schema_input_text = JSON.stringify(toJS(store.introspect.schema), null, 2)
 })
 
-// When mutation changes, automatically update the text version
-autorun(() => {
-    let mutation = toJS(store.mutate.mutation)
-    let schema = toJS(store.introspect.schema)
-    runInAction(() => {
-        store.mutate.mutation_input_text = JSON.stringify(mutation, null, 2)
-        store.mutate.paste_grid = json_to_aoa(mutation).map(_ => _.map((x: any) => ({ value: x })))
-        reset_mutation_log(store.mutate.mutation, schema)
-    })
+// Exported action to sync mutation paste grid from mutation object
+export const sync_mutation_grid = action(() => {
+    const mutation = toJS(store.mutate.mutation)
+    const entityKeys = Object.keys(mutation).filter(k => !k.startsWith('$'))
+    if (entityKeys.length === 0) {
+        store.mutate.paste_grid = []
+        return
+    }
+    // json_to_aoa expects a single-root object without $ keys
+    const entityOnly: any = {}
+    for (const k of entityKeys) entityOnly[k] = mutation[k]
+    try {
+        store.mutate.paste_grid = json_to_aoa(entityOnly).map(_ => _.map((x: any) => ({ value: x })))
+    } catch (e) {
+        store.mutate.paste_grid = []
+    }
 })
 
 // To interact with store from console
@@ -116,3 +133,34 @@ autorun(() => {
 window.store = store
 // @ts-ignore
 window.toJS = toJS
+
+// Text-only autoruns: sync query/mutation objects to their text editors
+// These do NOT generate SQL — that stays manual via the convert buttons
+autorun(() => {
+    const query = toJS(store.query.query)
+    const text = JSON.stringify(query, null, 2)
+    runInAction(() => {
+        store.query.query_input_text = text
+    })
+})
+
+autorun(() => {
+    const mutation = toJS(store.mutate.mutation)
+    const text = JSON.stringify(mutation, null, 2)
+    runInAction(() => {
+        store.mutate.mutation_input_text = text
+        // Also sync the paste grid so DataSheet reflects the current mutation
+        const entityKeys = Object.keys(mutation).filter(k => !k.startsWith('$'))
+        if (entityKeys.length === 0) {
+            store.mutate.paste_grid = []
+            return
+        }
+        const entityOnly: any = {}
+        for (const k of entityKeys) entityOnly[k] = mutation[k]
+        try {
+            store.mutate.paste_grid = json_to_aoa(entityOnly).map(_ => _.map((x: any) => ({ value: x })))
+        } catch (e) {
+            store.mutate.paste_grid = []
+        }
+    })
+})

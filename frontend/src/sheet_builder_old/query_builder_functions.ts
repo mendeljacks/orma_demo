@@ -9,7 +9,7 @@ import {
   get_parent_edges,
   is_entity_name,
 } from "orma/src/helpers/schema_helpers"
-import { OrmaSchema } from "orma/src/introspector/introspector"
+import { OrmaSchema } from "orma/build/types/schema/schema_types"
 import { assoc_path_mutate } from "yay_json/build/assoc_path_mutate"
 
 // Clauses are categorized based on parameters they take, so that cluases in the same category can be swapped without changing anything else.

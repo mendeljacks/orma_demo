@@ -3,7 +3,7 @@ import filterDeep from 'deepdash/filterDeep'
 import findValueDeep from 'deepdash/findValueDeep'
 import mapValuesDeep from 'deepdash/mapValuesDeep'
 import { action } from 'mobx'
-import { Path } from 'orma/src/types'
+import type { Path } from 'orma/build/types'
 import { assoc, assocPath, dropLast, last, reverse, type } from 'ramda'
 import { assoc_path_mutate } from 'yay_json/build/assoc_path_mutate'
 /**

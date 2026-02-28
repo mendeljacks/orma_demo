@@ -1,7 +1,7 @@
 import cuid from 'cuid'
 import { OrmaStatement, orma_introspect } from 'orma'
 import { orma_mutate, orma_query } from 'orma/src/index'
-import { OrmaSchema } from 'orma/src/introspector/introspector'
+import { OrmaSchema } from 'orma/src/types/schema/schema_types'
 import { mutation_entity_deep_for_each } from 'orma/src/mutate/helpers/mutate_helpers'
 import { apply_inherit_operations_macro } from 'orma/src/mutate/macros/inherit_operations_macro'
 import { validate_mutation } from 'orma/src/mutate/verifications/mutate_validation'

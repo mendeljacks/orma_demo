@@ -1,467 +1,488 @@
 export const orma_schema = {
-  "migrations": {
-    "id": {
-      "data_type": "bigint",
-      "ordinal_position": 1,
-      "not_null": true,
-      "character_count": 64,
-      "default": "unique_rowid()"
-    },
-    "name": {
-      "data_type": "character varying",
-      "ordinal_position": 2,
-      "not_null": true,
-      "character_count": 255
-    },
-    "run_on": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 3,
-      "not_null": true,
-      "decimal_places": 6
-    },
-    "$indexes": [
-      {
-        "index_name": "primary",
-        "is_unique": true,
-        "fields": [
-          "id"
-        ],
-        "invisible": false
-      }
-    ]
-  },
-  "users": {
-    "id": {
-      "data_type": "bigint",
-      "ordinal_position": 1,
-      "not_null": true,
-      "primary_key": true,
-      "character_count": 64,
-      "default": "nextval('public.users_id_seq'::REGCLASS)"
-    },
-    "email": {
-      "data_type": "character varying",
-      "ordinal_position": 2,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "password": {
-      "data_type": "character varying",
-      "ordinal_position": 3,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "first_name": {
-      "data_type": "character varying",
-      "ordinal_position": 4,
-      "character_count": 10485760
-    },
-    "last_name": {
-      "data_type": "character varying",
-      "ordinal_position": 5,
-      "character_count": 10485760
-    },
-    "phone": {
-      "data_type": "character varying",
-      "ordinal_position": 6,
-      "character_count": 10485760
-    },
-    "created_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 7,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "updated_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 8,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "resource_id": {
-      "data_type": "character varying",
-      "ordinal_position": 9,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "$indexes": [
-      {
-        "index_name": "primary",
-        "is_unique": true,
-        "fields": [
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_email_uq",
-        "is_unique": true,
-        "fields": [
-          "email"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_phone_uq",
-        "is_unique": true,
-        "fields": [
-          "phone"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "users_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
-        ],
-        "invisible": false
-      }
-    ]
-  },
-  "roles": {
-    "id": {
-      "data_type": "bigint",
-      "ordinal_position": 1,
-      "not_null": true,
-      "primary_key": true,
-      "character_count": 64,
-      "default": "nextval('public.roles_id_seq'::REGCLASS)"
-    },
-    "name": {
-      "data_type": "character varying",
-      "ordinal_position": 2,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "created_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 3,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "updated_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 4,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "resource_id": {
-      "data_type": "character varying",
-      "ordinal_position": 5,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "$indexes": [
-      {
-        "index_name": "primary",
-        "is_unique": true,
-        "fields": [
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "roles_name_uq",
-        "is_unique": true,
-        "fields": [
-          "name"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "roles_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
-        ],
-        "invisible": false
-      }
-    ]
-  },
-  "user_has_roles": {
-    "id": {
-      "data_type": "bigint",
-      "ordinal_position": 1,
-      "not_null": true,
-      "primary_key": true,
-      "character_count": 64,
-      "default": "nextval('public.user_has_roles_id_seq'::REGCLASS)"
-    },
-    "user_id": {
-      "data_type": "bigint",
-      "ordinal_position": 2,
-      "not_null": true,
-      "character_count": 64,
-      "references": {
-        "users": {
-          "id": {}
+  "$entities": {
+    "migrations": {
+      "$database_type": "postgres",
+      "$fields": {
+        "id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$default": "'nextval('migrations_id_seq'::regclass)'",
+          "$not_null": true
+        },
+        "name": {
+          "$data_type": "character varying",
+          "$precision": 255,
+          "$not_null": true
+        },
+        "run_on": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$not_null": true
         }
-      }
-    },
-    "role_id": {
-      "data_type": "bigint",
-      "ordinal_position": 3,
-      "not_null": true,
-      "character_count": 64,
-      "references": {
-        "roles": {
-          "id": {}
+      },
+      "$primary_key": {
+        "$fields": []
+      },
+      "$unique_keys": [
+        {
+          "$name": "migrations_pkey",
+          "$fields": [
+            "id"
+          ]
         }
-      }
+      ]
     },
-    "created_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 4,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "updated_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 5,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "resource_id": {
-      "data_type": "character varying",
-      "ordinal_position": 6,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "$indexes": [
-      {
-        "index_name": "primary",
-        "is_unique": true,
-        "fields": [
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "user_has_roles_user_id_role_id_uq",
-        "is_unique": true,
-        "fields": [
-          "role_id",
-          "user_id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "user_has_roles_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
-        ],
-        "invisible": false
-      }
-    ]
-  },
-  "permissions": {
-    "id": {
-      "data_type": "bigint",
-      "ordinal_position": 1,
-      "not_null": true,
-      "primary_key": true,
-      "character_count": 64,
-      "default": "nextval('public.permissions_id_seq'::REGCLASS)"
-    },
-    "name": {
-      "data_type": "character varying",
-      "ordinal_position": 2,
-      "not_null": true
-    },
-    "created_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 3,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "updated_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 4,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "resource_id": {
-      "data_type": "character varying",
-      "ordinal_position": 5,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "$indexes": [
-      {
-        "index_name": "primary",
-        "is_unique": true,
-        "fields": [
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "permissions_name_uq",
-        "is_unique": true,
-        "fields": [
-          "name"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "permissions_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
-        ],
-        "invisible": false
-      }
-    ]
-  },
-  "role_has_permissions": {
-    "id": {
-      "data_type": "bigint",
-      "ordinal_position": 1,
-      "not_null": true,
-      "primary_key": true,
-      "character_count": 64,
-      "default": "nextval('public.role_has_permissions_id_seq'::REGCLASS)"
-    },
-    "role_id": {
-      "data_type": "bigint",
-      "ordinal_position": 2,
-      "not_null": true,
-      "character_count": 64,
-      "references": {
-        "roles": {
-          "id": {}
+    "users": {
+      "$database_type": "postgres",
+      "$fields": {
+        "id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$default": "BY DEFAULT",
+          "$not_null": true
+        },
+        "email": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        },
+        "password": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        },
+        "first_name": {
+          "$data_type": "character varying",
+          "$precision": 10485760
+        },
+        "last_name": {
+          "$data_type": "character varying",
+          "$precision": 10485760
+        },
+        "phone": {
+          "$data_type": "character varying",
+          "$precision": 10485760
+        },
+        "created_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "updated_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "resource_id": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
         }
-      }
-    },
-    "permission_id": {
-      "data_type": "bigint",
-      "ordinal_position": 3,
-      "not_null": true,
-      "character_count": 64,
-      "references": {
-        "permissions": {
-          "id": {}
+      },
+      "$primary_key": {
+        "$fields": []
+      },
+      "$unique_keys": [
+        {
+          "$name": "users_email_uq",
+          "$fields": [
+            "email"
+          ]
+        },
+        {
+          "$name": "users_phone_uq",
+          "$fields": [
+            "phone"
+          ]
+        },
+        {
+          "$name": "users_pkey",
+          "$fields": [
+            "id"
+          ]
+        },
+        {
+          "$name": "users_resource_id_uq",
+          "$fields": [
+            "resource_id"
+          ]
         }
-      }
+      ]
     },
-    "created_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 4,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "updated_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 5,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "resource_id": {
-      "data_type": "character varying",
-      "ordinal_position": 6,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "$indexes": [
-      {
-        "index_name": "primary",
-        "is_unique": true,
-        "fields": [
-          "id"
-        ],
-        "invisible": false
+    "user_has_roles": {
+      "$database_type": "postgres",
+      "$fields": {
+        "id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$default": "BY DEFAULT",
+          "$not_null": true
+        },
+        "user_id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$not_null": true
+        },
+        "role_id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$not_null": true
+        },
+        "created_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "updated_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "resource_id": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        }
       },
-      {
-        "index_name": "role_has_permissions_role_id_permission_id_uq",
-        "is_unique": true,
-        "fields": [
-          "permission_id",
-          "role_id"
-        ],
-        "invisible": false
+      "$primary_key": {
+        "$fields": []
       },
-      {
-        "index_name": "role_has_permissions_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
-        ],
-        "invisible": false
-      }
-    ]
+      "$foreign_keys": [
+        {
+          "$name": "user_has_roles_role_id_fk",
+          "$fields": [
+            "role_id"
+          ],
+          "$references": {
+            "$entity": "roles",
+            "$fields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "$name": "user_has_roles_user_id_fk",
+          "$fields": [
+            "user_id"
+          ],
+          "$references": {
+            "$entity": "users",
+            "$fields": [
+              "id"
+            ]
+          }
+        }
+      ],
+      "$unique_keys": [
+        {
+          "$name": "user_has_roles_pkey",
+          "$fields": [
+            "id"
+          ]
+        },
+        {
+          "$name": "user_has_roles_resource_id_uq",
+          "$fields": [
+            "resource_id"
+          ]
+        },
+        {
+          "$name": "user_has_roles_user_id_role_id_uq",
+          "$fields": [
+            "user_id",
+            "role_id"
+          ]
+        }
+      ]
+    },
+    "roles": {
+      "$database_type": "postgres",
+      "$fields": {
+        "id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$default": "BY DEFAULT",
+          "$not_null": true
+        },
+        "name": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        },
+        "created_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "updated_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "resource_id": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        }
+      },
+      "$primary_key": {
+        "$fields": []
+      },
+      "$unique_keys": [
+        {
+          "$name": "roles_name_uq",
+          "$fields": [
+            "name"
+          ]
+        },
+        {
+          "$name": "roles_pkey",
+          "$fields": [
+            "id"
+          ]
+        },
+        {
+          "$name": "roles_resource_id_uq",
+          "$fields": [
+            "resource_id"
+          ]
+        }
+      ]
+    },
+    "role_has_permissions": {
+      "$database_type": "postgres",
+      "$fields": {
+        "id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$default": "BY DEFAULT",
+          "$not_null": true
+        },
+        "role_id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$not_null": true
+        },
+        "permission_id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$not_null": true
+        },
+        "created_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "updated_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "resource_id": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        }
+      },
+      "$primary_key": {
+        "$fields": []
+      },
+      "$foreign_keys": [
+        {
+          "$name": "role_has_permissions_permission_id_fk",
+          "$fields": [
+            "permission_id"
+          ],
+          "$references": {
+            "$entity": "permissions",
+            "$fields": [
+              "id"
+            ]
+          }
+        },
+        {
+          "$name": "role_has_permissions_role_id_fk",
+          "$fields": [
+            "role_id"
+          ],
+          "$references": {
+            "$entity": "roles",
+            "$fields": [
+              "id"
+            ]
+          }
+        }
+      ],
+      "$unique_keys": [
+        {
+          "$name": "role_has_permissions_pkey",
+          "$fields": [
+            "id"
+          ]
+        },
+        {
+          "$name": "role_has_permissions_resource_id_uq",
+          "$fields": [
+            "resource_id"
+          ]
+        },
+        {
+          "$name": "role_has_permissions_role_id_permission_id_uq",
+          "$fields": [
+            "role_id",
+            "permission_id"
+          ]
+        }
+      ]
+    },
+    "permissions": {
+      "$database_type": "postgres",
+      "$fields": {
+        "id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$default": "BY DEFAULT",
+          "$not_null": true
+        },
+        "name": {
+          "$data_type": "character varying",
+          "$not_null": true
+        },
+        "created_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "updated_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "resource_id": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        }
+      },
+      "$primary_key": {
+        "$fields": []
+      },
+      "$unique_keys": [
+        {
+          "$name": "permissions_name_uq",
+          "$fields": [
+            "name"
+          ]
+        },
+        {
+          "$name": "permissions_pkey",
+          "$fields": [
+            "id"
+          ]
+        },
+        {
+          "$name": "permissions_resource_id_uq",
+          "$fields": [
+            "resource_id"
+          ]
+        }
+      ]
+    },
+    "groups": {
+      "$database_type": "postgres",
+      "$fields": {
+        "id": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$default": "BY DEFAULT",
+          "$not_null": true
+        },
+        "name": {
+          "$data_type": "integer",
+          "$precision": 32,
+          "$not_null": true
+        },
+        "created_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "updated_at": {
+          "$data_type": "timestamp without time zone",
+          "$precision": 6,
+          "$default": "'now()'",
+          "$not_null": true
+        },
+        "resource_id": {
+          "$data_type": "character varying",
+          "$precision": 10485760,
+          "$not_null": true
+        }
+      },
+      "$primary_key": {
+        "$fields": []
+      },
+      "$unique_keys": [
+        {
+          "$name": "groups_name_uq",
+          "$fields": [
+            "name"
+          ]
+        },
+        {
+          "$name": "groups_pkey",
+          "$fields": [
+            "id"
+          ]
+        },
+        {
+          "$name": "groups_resource_id_uq",
+          "$fields": [
+            "resource_id"
+          ]
+        }
+      ]
+    }
   },
-  "groups": {
-    "id": {
-      "data_type": "bigint",
-      "ordinal_position": 1,
-      "not_null": true,
-      "primary_key": true,
-      "character_count": 64,
-      "default": "nextval('public.groups_id_seq'::REGCLASS)"
-    },
-    "name": {
-      "data_type": "bigint",
-      "ordinal_position": 2,
-      "not_null": true,
-      "character_count": 64
-    },
-    "created_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 3,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "updated_at": {
-      "data_type": "timestamp without time zone",
-      "ordinal_position": 4,
-      "not_null": true,
-      "decimal_places": 6,
-      "default": "now():::TIMESTAMP"
-    },
-    "resource_id": {
-      "data_type": "character varying",
-      "ordinal_position": 5,
-      "not_null": true,
-      "character_count": 10485760
-    },
-    "$indexes": [
-      {
-        "index_name": "primary",
-        "is_unique": true,
-        "fields": [
-          "id"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "groups_name_uq",
-        "is_unique": true,
-        "fields": [
-          "name"
-        ],
-        "invisible": false
-      },
-      {
-        "index_name": "groups_resource_id_uq",
-        "is_unique": true,
-        "fields": [
-          "resource_id"
-        ],
-        "invisible": false
-      }
-    ]
+  "$cache": {
+    "$reversed_foreign_keys": {
+      "roles": [
+        {
+          "from_field": "id",
+          "to_entity": "user_has_roles",
+          "to_field": "role_id"
+        },
+        {
+          "from_field": "id",
+          "to_entity": "role_has_permissions",
+          "to_field": "role_id"
+        }
+      ],
+      "users": [
+        {
+          "from_field": "id",
+          "to_entity": "user_has_roles",
+          "to_field": "user_id"
+        }
+      ],
+      "permissions": [
+        {
+          "from_field": "id",
+          "to_entity": "role_has_permissions",
+          "to_field": "permission_id"
+        }
+      ]
+    }
   }
 } as const
