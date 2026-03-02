@@ -4,8 +4,8 @@ import { action, runInAction, toJS } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import { sql_to_orma_query } from 'orma'
 import { orma_query } from '../helpers/api_helpers'
-import { is_loading } from '../sheet_builder_old/is_loading'
-import { QueryBuilder } from '../sheet_builder_old/query_builder'
+import { is_loading } from '../helpers/is_loading'
+import { QueryBuilder } from 'orma-ui/src/query_builder/query_builder'
 import { store, reset_query_log } from '../store'
 import { styles } from '../theme'
 import { try_parse_json } from '../try_parse_json'
@@ -33,7 +33,7 @@ export const QueryPage = observer(() => {
                 {/* Visual Query Builder */}
                 <div style={{ ...styles.visualBuilderArea as React.CSSProperties, marginBottom: 24 }}>
                     <Typography style={styles.subLabel as React.CSSProperties}>Visual Query Builder</Typography>
-                    <QueryBuilder path_array={[]} query={store.query.query} />
+                    <QueryBuilder query={store.query.query} orma_schema={store.introspect.schema} />
                 </div>
 
                 {/* Editors: Orma JSON ↔ SQL */}

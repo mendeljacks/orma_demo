@@ -2,7 +2,7 @@ import { Typography } from '@mui/material'
 import { action } from 'mobx'
 import ReactDataSheet from 'react-datasheet'
 import 'react-datasheet/lib/react-datasheet.css'
-import { Center } from '../sheet_builder_old/center'
+import { Center } from './center'
 import { store } from '../store'
 
 export const DataSheet = () => {

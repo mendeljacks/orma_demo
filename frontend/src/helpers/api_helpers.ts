@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { keys, type } from 'ramda'
 import { get_error_toast_message } from '../components/toasts'
-import { wrap_loading } from '../sheet_builder_old/is_loading'
+import { wrap_loading } from './is_loading'
 import { store } from '../store'
 import { show_toast } from './helpers'
 
@@ -23,7 +23,7 @@ export const axios_post = wrap_loading(async (url, body) => {
         url: get_base_url(window.location.host) + url,
         data: body,
         params: {
-            db_type: store.introspect.db.toLowerCase(),
+            database_type: store.introspect.db.toLowerCase(),
             pg: JSON.stringify(store.introspect.pg),
             mysql: JSON.stringify(store.introspect.mysql)
         },

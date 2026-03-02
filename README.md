@@ -126,7 +126,7 @@ Example mutation:
 | POST   | `/mutate`     | Execute an Orma mutation           |
 | POST   | `/introspect` | Introspect database schema (Connect tab) |
 
-All endpoints accept `db_type`, `pg`, and `mysql` as query parameters for database connection configuration.
+All endpoints accept `database_type`, `pg`, and `mysql` as query parameters for database connection configuration.
 
 ## Tech Stack
 
@@ -136,9 +136,6 @@ All endpoints accept `db_type`, `pg`, and `mysql` as query parameters for databa
 
 **Shared**: Orma schema (auto-generated TypeScript)
 
-## Development
-
-The frontend uses a local symlink to the `orma` package (`"orma": "file:../../orma"` in package.json) for development. The backend uses the published npm version.
 
 Database migrations are managed with `db-migrate`. Configuration is in `backend/database.json`.
 

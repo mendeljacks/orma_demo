@@ -1,7 +1,7 @@
 import { action } from 'mobx'
 import { isNil } from 'ramda'
 import { assoc_path_mutate } from 'yay_json/build/assoc_path_mutate'
-import { safe_path_or } from '../sheet_builder_old/data_helpers'
+import { safe_path_or } from './data_helpers'
 import { store } from '../store'
 
 export const commonTabProps = (str: string) => {
