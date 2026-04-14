@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001
 
 export const start = async (env: 'production' | 'development') => {
     const app = express()
-    await introspect(env)
+    // await introspect(env) // skipped: orma pg introspect bug wipes primary keys
 
     app.use(cors())
     app.use(express.json({ limit: '50mb' }))

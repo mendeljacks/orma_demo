@@ -5,10 +5,26 @@ import { observer } from 'mobx-react-lite'
 import { sql_to_orma_mutation } from 'orma'
 import { DataSheet } from '../components/data_sheet'
 import { orma_mutate } from '../helpers/api_helpers'
+import { show_toast } from '../helpers/helpers'
 import { is_loading } from '../helpers/is_loading'
 import { store, reset_mutation_log } from '../store'
 import { styles } from '../theme'
 import { try_parse_json } from '../try_parse_json'
+
+const copy_spreadsheet_to_clipboard = async () => {
+    const grid = toJS(store.mutate.paste_grid)
+    if (grid.length === 0) {
+        show_toast('info', 'No data to copy')
+        return
+    }
+    const tsv = grid.map(row => row.map(cell => String(cell.value ?? '')).join('\t')).join('\n')
+    try {
+        await navigator.clipboard.writeText(tsv)
+        show_toast('success', 'Copied spreadsheet to clipboard (TSV)')
+    } catch {
+        show_toast('error', 'Failed to copy to clipboard')
+    }
+}
 
 const convert_json_to_sql = action(() => {
     const mutation = toJS(store.mutate.mutation)
@@ -32,7 +48,16 @@ export const MutatePage = observer(() => {
             <div style={styles.card as React.CSSProperties}>
                 {/* Data Sheet */}
                 <div style={{ ...styles.visualBuilderArea as React.CSSProperties, marginBottom: 24 }}>
-                    <Typography style={styles.subLabel as React.CSSProperties}>Data Sheet</Typography>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography style={{ ...styles.subLabel as React.CSSProperties, marginBottom: 0 }}>Data Sheet</Typography>
+                        <Button
+                            {...styles.secondaryButton}
+                            onClick={copy_spreadsheet_to_clipboard}
+                            disabled={store.mutate.paste_grid.length === 0}
+                        >
+                            Copy to Clipboard
+                        </Button>
+                    </div>
                     <DataSheet />
                 </div>
 
