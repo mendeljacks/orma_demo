@@ -48,9 +48,6 @@ export const store = observable({
         toast_severity: 'success' as AlertColor,
         toast_auto_hide_duration: 0,
         toast_is_open: false
-    },
-    shared: {
-        token: ''
     }
 })
 
