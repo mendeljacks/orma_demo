@@ -53,14 +53,24 @@ jobs:
     backend:
         name: Backend
         needs: changes
-        if: ${{ needs.changes.outputs.backend == 'true' }}
+        if: ${{ needs.changes.outputs.backend == 'true' && github.ref == 'refs/heads/main' }}
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Repo
-              uses: actions/checkout@main
+              uses: actions/checkout@v4
 
-            - name: Install Heroku CLI
-              run: curl https://cli-assets.heroku.com/install.sh | sh
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Install kubectl
+              uses: azure/setup-kubectl@v4
+              with:
+                  version: latest
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
 
             - name: npm i -> backend
               run: cd backend && npm install
@@ -68,5 +78,9 @@ jobs:
             - name: npm i -> common
               run: cd common && npm install
 
-            - name: run npm deploy
-              run: cd backend && HEROKU_API_KEY=${{secrets.HEROKU_API_KEY}} npm run deploy
+            - name: Build, push, and roll out
+              run: cd backend && npm run deploy
+              env:
+                  KUBECONFIG_BASE64: ${{ secrets.KUBECONFIG_BASE64 }}
+                  REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+                  REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}

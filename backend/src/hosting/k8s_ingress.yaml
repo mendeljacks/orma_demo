@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: backend
+    namespace: orma-playground
+    annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+        nginx.ingress.kubernetes.io/proxy-body-size: '50m'
+        nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+        nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
+spec:
+    ingressClassName: nginx
+    tls:
+        - hosts: [orma-playground-api.ormatechnology.com]
+          secretName: orma-playground-api-tls
+    rules:
+        - host: orma-playground-api.ormatechnology.com
+          http:
+              paths:
+                  - pathType: Prefix
+                    path: /
+                    backend:
+                        service:
+                            name: backend
+                            port:
+                                number: 3001

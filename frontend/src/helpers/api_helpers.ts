@@ -11,26 +11,26 @@ const get_base_url = (host: string) => {
     }
 
     const base_urls = {
-        'orma-playground.web.app': 'https://orma-demo.herokuapp.com'
+        'orma-playground.web.app': 'https://orma-playground-api.ormatechnology.com'
     } as { [key: string]: string }
 
     return base_urls[host]
 }
 
 export const axios_post = wrap_loading(async (url, body) => {
-    const params: any = {
+    const db_type = store.introspect.db.toLowerCase()
+    const db_config = db_type === 'mysql' ? store.introspect.mysql : store.introspect.pg
+
+    const response = await axios({
         method: 'POST',
         url: get_base_url(window.location.host) + url,
         data: body,
-        params: {
-            database_type: store.introspect.db.toLowerCase(),
-            pg: JSON.stringify(store.introspect.pg),
-            mysql: JSON.stringify(store.introspect.mysql)
-        },
-        headers: { Authorization: 'Bearer ' + store.shared.token }
-    }
-
-    const response = await axios(params)
+        headers: {
+            'content-type': 'application/json',
+            'x-database-type': db_type,
+            'x-db-config': JSON.stringify(db_config)
+        }
+    })
 
     return response.data
 })
