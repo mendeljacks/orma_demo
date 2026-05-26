@@ -123,3 +123,4 @@ export const deploy = async () => {
         process.exit(1)
     }
 }
+

@@ -4,10 +4,10 @@
     "description": "Orma playground backend (Fastify + biab)",
     "main": "src/server.ts",
     "scripts": {
-        "dev": "tsx watch --inspect -e \"import('./src/server.ts').then((m) => m.main())\"",
-        "start": "tsx -e \"import('./src/server.ts').then((m) => m.main())\"",
-        "deploy": "tsx -e \"import('./src/hosting/deploy.ts').then((m) => m.deploy())\"",
-        "deploy_init": "tsx -e \"import('./src/hosting/deploy.ts').then((m) => m.deploy_init())\""
+        "dev": "tsx watch --inspect -e \"import('./src/server.ts').then((m) => m.default.main())\"",
+        "start": "tsx -e \"import('./src/server.ts').then((m) => m.default.main())\"",
+        "deploy": "tsx -e \"import('./src/hosting/deploy.ts').then((m) => m.default.deploy())\"",
+        "deploy_init": "tsx -e \"import('./src/hosting/deploy.ts').then((m) => m.default.deploy_init())\""
     },
     "author": "",
     "license": "ISC",
